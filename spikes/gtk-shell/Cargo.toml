@@ -1,0 +1,15 @@
+[package]
+name = "aporia-gtk-shell-spike"
+version = "0.0.0"
+edition = "2021"
+rust-version = "1.92"
+publish = false
+description = "Plan B spike: GTK4 notes shell with a text editor and open/save"
+
+# Standalone crate. The empty workspace table keeps this spike out of any
+# future workspace at the repository root.
+[workspace]
+
+[dependencies]
+# The crate is published as `gtk4`; rename it so source reads `gtk::`.
+gtk = { package = "gtk4", version = "0.11", features = ["v4_10"] }

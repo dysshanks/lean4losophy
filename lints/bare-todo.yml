@@ -1,0 +1,18 @@
+id: bare-todo-marker
+language: Rust
+severity: error
+message: "APORIA-2005: bare TODO/FIXME/HACK/XXX marker; use TODO(#issue): ... or fix it"
+note: |
+  A bare marker is permanent temporary code. Either fix the work now, or track
+  it with an issue reference such as `TODO(#123): ...` so it can be found and
+  closed. See docs/lints/APORIA-2005.md.
+# No `files:` filter: scripts/lint scans `crates`, and the rule fixtures are
+# scanned explicitly so the rule itself stays testable.
+rule:
+  all:
+    - any:
+        - kind: line_comment
+        - kind: block_comment
+    - regex: '\b(TODO|FIXME|HACK|XXX)\b'
+    - not:
+        regex: '\b(TODO|FIXME|HACK|XXX)\s*\(#'

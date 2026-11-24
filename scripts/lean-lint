@@ -1,0 +1,65 @@
+#!/usr/bin/env bash
+# SPDX-License-Identifier: Apache-2.0
+# Copyright 2026 The Aporia Authors
+#
+# Scan the shipped Lean library for constructs banned by LINT-POLICY.md.
+# User notebooks are exempt; this checks only lean/Aporia.
+# Exits nonzero on any finding. A missing lean/Aporia directory is not a
+# failure, because the Lean library arrives after the Rust notes shell.
+
+set -euo pipefail
+
+repo_root="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)"
+cd -- "$repo_root"
+
+lean_dir="lean/Aporia"
+
+if [[ ! -d "$lean_dir" ]]; then
+  printf 'info: %s not present; skipping Lean library scan\n' "$lean_dir"
+  exit 0
+fi
+
+failures=0
+
+fail() {
+  printf 'error: %s\n' "$*" >&2
+  failures=$((failures + 1))
+}
+
+# scan PATTERN CODE DESCRIPTION
+scan() {
+  local pattern="$1"
+  local code="$2"
+  local description="$3"
+  local output
+
+  # Skip whole-line comments; a token in prose is not a definition. Inline
+  # comments after code are still reported, which is deliberate.
+  output="$(
+    grep -rnE --include='*.lean' -- "$pattern" "$lean_dir" 2>/dev/null \
+      | grep -vE ':[0-9]+:[[:space:]]*(--|/-|-)' \
+      || true
+  )"
+
+  if [[ -n "$output" ]]; then
+    printf '%s\n' "$output" >&2
+    fail "$code: $description"
+  fi
+}
+
+printf '==> Lean library scan: %s\n' "$lean_dir"
+
+scan '\bsorry\b' 'APORIA-4001' 'no `sorry` in the shipped Lean library; prove it or state it as a hypothesis'
+scan '\badmit\b' 'APORIA-4001' 'no `admit` in the shipped Lean library; prove it or state it as a hypothesis'
+scan '\baxiom\b' 'APORIA-4002' 'no `axiom` without an ADR'
+scan '\bnative_decide\b' 'APORIA-4003' 'no `native_decide` in the core; use a kernel proof or `decide`'
+scan '\bpartial\b' 'APORIA-4004' 'no `partial` definitions; use structural recursion'
+scan '#eval\b' 'APORIA-4005' 'no `#eval` in the library; use tests or `#guard`'
+
+if ((failures > 0)); then
+  printf '\nerror: Lean lint failed with %d finding group(s)\n' "$failures" >&2
+  printf 'error: read the matching docs/lints/APORIA-4xxx.md page before fixing\n' >&2
+  exit 1
+fi
+
+printf 'info: Lean library scan passed\n'

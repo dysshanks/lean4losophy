@@ -1,0 +1,163 @@
+# Aporia design tokens.
+# Single source of truth for app and paper values (DESIGN-PLAN.md sections 3 and 7).
+# Edit only this file, then run: python3 scripts/gen-design-tokens
+#
+# Colours are HSL: h in degrees, s and l in 0.0-1.0. One hue per semantic colour;
+# states vary lightness and chroma only. Greys carry a blue tint (hue 220).
+
+[meta]
+version = 1
+neutral_hue = 220
+
+[color.light]
+bg             = { h = 220, s = 0.28, l = 0.955 }
+surface        = { h = 220, s = 0.35, l = 0.990 }
+surface_raised = { h = 220, s = 0.25, l = 0.997 }
+border         = { h = 220, s = 0.15, l = 0.860 }
+text           = { h = 220, s = 0.30, l = 0.145 }
+muted          = { h = 220, s = 0.14, l = 0.440 }
+accent         = { h = 232, s = 0.62, l = 0.460 }
+on_accent      = { h = 232, s = 0.20, l = 0.985 }
+danger         = { h = 8,   s = 0.66, l = 0.400 }
+on_danger      = { h = 8,   s = 0.18, l = 0.985 }
+success        = { h = 150, s = 0.42, l = 0.340 }
+warning        = { h = 38,  s = 0.85, l = 0.360 }
+
+[color.dark]
+bg             = { h = 220, s = 0.13, l = 0.115 }
+surface        = { h = 220, s = 0.12, l = 0.150 }
+surface_raised = { h = 220, s = 0.11, l = 0.195 }
+border         = { h = 220, s = 0.09, l = 0.270 }
+text           = { h = 220, s = 0.10, l = 0.925 }
+muted          = { h = 220, s = 0.09, l = 0.700 }
+accent         = { h = 232, s = 0.40, l = 0.700 }
+on_accent      = { h = 232, s = 0.25, l = 0.150 }
+danger         = { h = 8,   s = 0.45, l = 0.680 }
+on_danger      = { h = 8,   s = 0.25, l = 0.150 }
+success        = { h = 150, s = 0.28, l = 0.660 }
+warning        = { h = 38,  s = 0.55, l = 0.720 }
+
+# WCAG 2.2 AA: 4.5:1 for normal text. The generator fails if a pair is below.
+[[contrast]]
+fg = "text"
+bg = "bg"
+min = 4.5
+theme = "light"
+
+[[contrast]]
+fg = "text"
+bg = "surface"
+min = 4.5
+theme = "light"
+
+[[contrast]]
+fg = "muted"
+bg = "bg"
+min = 4.5
+theme = "light"
+
+[[contrast]]
+fg = "accent"
+bg = "bg"
+min = 4.5
+theme = "light"
+
+[[contrast]]
+fg = "danger"
+bg = "bg"
+min = 4.5
+theme = "light"
+
+[[contrast]]
+fg = "on_accent"
+bg = "accent"
+min = 4.5
+theme = "light"
+
+[[contrast]]
+fg = "on_danger"
+bg = "danger"
+min = 4.5
+theme = "light"
+
+[[contrast]]
+fg = "text"
+bg = "bg"
+min = 4.5
+theme = "dark"
+
+[[contrast]]
+fg = "muted"
+bg = "bg"
+min = 4.5
+theme = "dark"
+
+[[contrast]]
+fg = "accent"
+bg = "bg"
+min = 4.5
+theme = "dark"
+
+[[contrast]]
+fg = "on_accent"
+bg = "accent"
+min = 4.5
+theme = "dark"
+
+[typography]
+ui_family = "system-ui"
+paper_family = "Libertinus Serif"
+# size_px / line_px
+caption_size = 12.0
+caption_line = 16.0
+body_size = 14.0
+body_line = 21.0
+body_large_size = 16.0
+body_large_line = 24.0
+h3_size = 20.0
+h3_line = 24.0
+h2_size = 24.0
+h2_line = 28.0
+h1_size = 32.0
+h1_line = 36.0
+display_size = 40.0
+display_line = 44.0
+body_weight = 400
+heading_weight = 650
+
+[spacing]
+xs = 4
+sm = 8
+md = 12
+lg = 16
+xl = 24
+xxl = 32
+xxxl = 48
+
+[radius]
+control = 8
+card = 12
+pill = 999
+
+[elevation]
+# Layered small shadows; no single large blur.
+level1 = "0 1px 2px rgba(0,0,0,0.06), 0 1px 1px rgba(0,0,0,0.04)"
+level2 = "0 1px 2px rgba(0,0,0,0.06), 0 4px 8px rgba(0,0,0,0.05)"
+level3 = "0 1px 2px rgba(0,0,0,0.06), 0 6px 12px rgba(0,0,0,0.05), 0 12px 24px rgba(0,0,0,0.04)"
+dark_scale = 0.35
+
+[paper]
+body_size_pt = 11.0
+body_leading = 1.40
+heading_leading = 1.15
+body_font = "Libertinus Serif"
+heading_font = "Libertinus Serif"
+measure_chars = 68
+page_size = "a4"
+margin_top_mm = 25
+margin_bottom_mm = 25
+margin_left_mm = 30
+margin_right_mm = 30
+heading_space_above_pt = 18.0
+heading_space_below_pt = 8.0
+caption_leading = 1.35

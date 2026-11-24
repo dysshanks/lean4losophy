@@ -1,0 +1,26 @@
+[workspace]
+resolver = "2"
+members = ["crates/*"]
+
+[workspace.package]
+version = "0.0.0"
+edition = "2024"
+rust-version = "1.85"
+license = "Apache-2.0"
+authors = ["The Aporia Authors"]
+publish = false
+
+[workspace.lints.rust]
+unsafe_code = "deny"
+
+# Project lints from LINT-POLICY.md. Keep in sync with docs/lints/.
+[workspace.lints.clippy]
+unwrap_used = "deny"
+expect_used = "deny"
+panic = "deny"
+todo = "deny"
+unimplemented = "deny"
+dbg_macro = "deny"
+print_stdout = "deny"
+print_stderr = "deny"
+exit = "deny"

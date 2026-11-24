@@ -1,0 +1,57 @@
+# cargo-deny configuration for Aporia.
+# Enforced by ./scripts/lint and CI. See docs/lints/APORIA-3006.md and
+# docs/THIRD-PARTY-NOTICES.md for the license review behind this allowlist.
+
+[graph]
+all-features = true
+
+[advisories]
+version = 2
+yanked = "deny"
+ignore = []
+
+[licenses]
+version = 2
+# Apache-2.0-compatible licenses only. Copyleft libraries that the app links
+# against must be runtime-provided (Flatpak runtime, system packages) and are
+# reviewed in docs/THIRD-PARTY-NOTICES.md, not added as Rust crates.
+allow = [
+  "Apache-2.0",
+  "Apache-2.0 WITH LLVM-exception",
+  "MIT",
+  "MIT-0",
+  "BSD-2-Clause",
+  "BSD-3-Clause",
+  "ISC",
+  "Zlib",
+  "0BSD",
+  "BSL-1.0",
+  "Unicode-3.0",
+  "Unicode-DFS-2016",
+  "CC0-1.0",
+  "MPL-2.0",
+]
+confidence-threshold = 0.93
+# The allowlist is a standing policy, not a list of currently resolved crates,
+# so an unmatched entry is expected and is not a finding. A dependency whose
+# license is not listed still fails.
+unused-allowed-license = "allow"
+
+[bans]
+# Duplicate major versions are warnings, not errors. GTK's proc-macro build
+# path legitimately carries older `toml`, `winnow`, and `system-deps` versions
+# next to ours; they are build-time only and not shipped. Licenses, advisories,
+# unknown sources, and wildcards stay errors, and duplicate reviews happen at
+# review time (APORIA-6001).
+multiple-versions = "warn"
+wildcards = "deny"
+highlight = "all"
+# A dependency that opens a socket, uploads data, or ships telemetry is a
+# policy question, not a build detail. Add here with an ADR, never silently.
+deny = []
+
+[sources]
+unknown-registry = "deny"
+unknown-git = "deny"
+allow-registry = ["https://github.com/rust-lang/crates.io-index"]
+allow-git = []

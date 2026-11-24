@@ -1,0 +1,28 @@
+# Clippy thresholds for the Aporia workspace.
+# Lint levels live in [workspace.lints] in Cargo.toml; this file tunes limits.
+
+msrv = "1.85"
+
+# A function longer than this is usually doing more than one job.
+too-many-lines-threshold = 100
+
+# Cognitive complexity above this is hard to review and test.
+cognitive-complexity-threshold = 20
+
+# More than this many parameters usually means an argument struct is due.
+too-many-arguments-threshold = 6
+
+# Type signatures above this complexity get a named alias.
+type-complexity-threshold = 200
+
+# Short names are fine for loop indices and coordinates.
+single-char-binding-names-threshold = 4
+
+# Large enums that are cloned often should use Box or Arc instead.
+enum-variant-size-threshold = 200
+
+# Do not suggest API breaks for exported items in this workspace.
+avoid-breaking-exported-api = true
+
+# Tests may use small literals without named constants.
+literal-representation-threshold = 4096

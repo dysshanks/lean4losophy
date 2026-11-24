@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=Application
+Name=Aporia
+GenericName=Philosophy Notebook
+Comment=Local-first notebook for structured philosophical arguments
+Exec=aporia %U
+Icon=io.github.aporia.Notebook
+Terminal=false
+Categories=Office;Education;
+Keywords=notes;markdown;logic;philosophy;arguments;
+StartupNotify=true

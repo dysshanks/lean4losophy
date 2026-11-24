@@ -1,0 +1,52 @@
+# SPDX-License-Identifier: Apache-2.0
+# Maintainer: The Aporia Authors <maintainers@aporia.invalid>
+# Status: skeleton for Gate G1. It builds the Rust workspace from source and
+# installs the M1 application, desktop entry, and metainfo. The icon is added
+# with the branding work before M7. `lean4` stays optional (ADR-0003).
+
+pkgname=aporia-git
+pkgver=0.0.0
+pkgrel=1
+pkgdesc="Local-first notebook for structured philosophical arguments"
+arch=(x86_64 aarch64)
+url="https://github.com/aporia-notebook/aporia"
+license=(Apache-2.0)
+depends=(
+  gcc-libs
+  glibc
+  gtk4
+  libadwaita
+)
+makedepends=(cargo rust pkgconf)
+optdepends=('lean4: optional formal checking of arguments')
+source=("$pkgname::git+$url#branch=main")
+sha256sums=('SKIP')
+
+pkgver() {
+  cd "$pkgname"
+  git describe --long --tags --abbrev=7 2>/dev/null | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g' ||
+    printf 'r%s.%s' "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+build() {
+  cd "$pkgname"
+  export CARGO_TARGET_DIR="$srcdir/target"
+  cargo build --frozen --release --workspace
+}
+
+check() {
+  cd "$pkgname"
+  export CARGO_TARGET_DIR="$srcdir/target"
+  cargo test --frozen --workspace
+}
+
+package() {
+  cd "$pkgname"
+  install -Dm755 "$srcdir/target/release/aporia" "$pkgdir/usr/bin/aporia"
+  install -Dm644 packaging/flatpak/io.github.aporia.Notebook.desktop \
+    "$pkgdir/usr/share/applications/io.github.aporia.Notebook.desktop"
+  install -Dm644 packaging/flatpak/io.github.aporia.Notebook.metainfo.xml \
+    "$pkgdir/usr/share/metainfo/io.github.aporia.Notebook.metainfo.xml"
+  install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+  install -Dm644 NOTICE "$pkgdir/usr/share/licenses/$pkgname/NOTICE"
+}

@@ -1,0 +1,23 @@
+[package]
+name = "aporia"
+description = "GTK4 notebook application for Aporia"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+authors.workspace = true
+publish.workspace = true
+
+[[bin]]
+name = "aporia"
+path = "src/main.rs"
+
+[dependencies]
+aporia-core = { path = "../aporia-core", version = "0.0.0" }
+gtk = { package = "gtk4", version = "0.11", features = ["v4_10"] }
+libadwaita = { version = "0.9", features = ["v1_6"] }
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+
+[lints]
+workspace = true

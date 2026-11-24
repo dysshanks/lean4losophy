@@ -1,0 +1,258 @@
+#!/usr/bin/env bash
+# SPDX-License-Identifier: Apache-2.0
+# Copyright 2026 The Aporia Authors
+#
+# Aporia lint gate. This is the single entry point used locally and in CI.
+# Findings are errors. Optional tools that are not installed are reported and
+# skipped; a missing optional tool is not a failure.
+
+set -euo pipefail
+
+repo_root="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)"
+cd -- "$repo_root"
+
+failures=0
+
+info() {
+  printf 'info: %s\n' "$*"
+}
+
+section() {
+  printf '\n==> %s\n' "$*"
+}
+
+fail() {
+  printf 'error: %s\n' "$*" >&2
+  failures=$((failures + 1))
+}
+
+skip() {
+  printf 'info: %s not installed; skipping (install it for the full gate)\n' "$*"
+}
+
+have() {
+  command -v "$1" >/dev/null 2>&1
+}
+
+# Formatting is part of the gate, not a preference.
+section "cargo fmt --check"
+if ! cargo fmt --all -- --check; then
+  fail "formatting drift; run cargo fmt --all"
+fi
+
+# Clippy with the workspace lints denied. The APORIA codes in the summary map
+# common findings to their policy pages.
+section "cargo clippy -D warnings"
+if ! cargo clippy --workspace --all-targets --all-features -- -D warnings; then
+  fail "clippy failed; see APORIA-1002 (unwrap/expect), APORIA-1003 (panic/todo/unimplemented), APORIA-1007 (process::exit), APORIA-1008 (println/dbg)"
+fi
+
+# Custom checks for patterns that a compiler or Clippy cannot see, or that must
+# stay visible in review. Scoped to crates/; spikes/ and test directories are
+# excluded where noted.
+section "custom pattern checks"
+
+# check_pattern CODE PATTERN DESCRIPTION EXCLUDE_TESTS
+check_pattern() {
+  local code="$1"
+  local pattern="$2"
+  local description="$3"
+  local exclude_tests="${4:-false}"
+  local -a args=(-rnP --include='*.rs' --exclude-dir=target)
+
+  if [[ "$exclude_tests" == "true" ]]; then
+    args+=(--exclude-dir=tests)
+  fi
+
+  local output
+  output="$(grep "${args[@]}" -- "$pattern" crates 2>/dev/null || true)"
+
+  if [[ -n "$output" ]]; then
+    printf '%s\n' "$output" >&2
+    fail "$code: $description"
+  fi
+}
+
+# APORIA-2005: bare TODO/FIXME/HACK/XXX. Tracked markers such as
+# `TODO(#123): ...` are allowed.
+check_pattern \
+  "APORIA-2005" \
+  '\b(TODO|FIXME|HACK|XXX)\b(?!\s*\()' \
+  "bare TODO/FIXME/HACK/XXX marker; use TODO(#issue): ... or fix it"
+
+# APORIA-1009: no #[allow(...)]; use #[expect(..., reason = "APORIA-xxxx: ...")].
+check_pattern \
+  "APORIA-1009" \
+  '#!?\[allow\b' \
+  "suppression via #[allow]; use #[expect(..., reason = \"APORIA-xxxx: ...\")]"
+
+# APORIA-1008: no println!/dbg! for logging in production code. Tests under
+# crates/*/tests/ are excluded; in-file #[cfg(test)] modules should use the
+# test harness instead of printing.
+check_pattern \
+  "APORIA-1008" \
+  '\b(print|println|eprint|eprintln|dbg)!\s*\(' \
+  "println!/dbg! style output in production code; use tracing or return a value" \
+  "true"
+
+# APORIA-1009: every #[expect] must name a code and a reason on the attribute
+# line, so an exception is searchable and cannot hide. A multi-line attribute is
+# reported on purpose: keep the code and reason on the line with the attribute.
+section "suppression audit"
+expectations="$(grep -rn --include='*.rs' --exclude-dir=target '#\[expect(' crates 2>/dev/null || true)"
+if [[ -n "$expectations" ]]; then
+  while IFS= read -r line; do
+    if [[ "$line" != *APORIA-* || "$line" != *reason* ]]; then
+      printf '%s\n' "$line" >&2
+      fail "APORIA-1009: #[expect] without an APORIA code and a reason on the attribute line"
+    fi
+  done <<< "$expectations"
+fi
+
+# Dependency licenses, advisories, and secret scanning. These are optional
+# locally but part of the policy; CI should provide them when available.
+section "cargo deny"
+if have cargo-deny; then
+  if ! cargo deny check; then
+    fail "APORIA-3006: cargo-deny reported a license, advisory, ban, or source finding"
+  fi
+else
+  skip "cargo-deny"
+fi
+
+section "cargo audit"
+if have cargo-audit; then
+  if ! cargo audit; then
+    fail "cargo-audit reported a vulnerable dependency"
+  fi
+else
+  skip "cargo-audit"
+fi
+
+section "gitleaks"
+if have gitleaks; then
+  if ! gitleaks detect --no-banner --redact --source .; then
+    fail "APORIA-3005: gitleaks found a possible secret in the repository"
+  fi
+else
+  skip "gitleaks"
+fi
+
+section "typos"
+if have typos; then
+  if ! typos; then
+    fail "typos found a spelling error"
+  fi
+else
+  skip "typos"
+fi
+
+section "ast-grep"
+if have ast-grep || have sg; then
+  ast_grep_bin="ast-grep"
+  if ! have ast-grep; then
+    ast_grep_bin="sg"
+  fi
+
+  # ast-grep accepts one --rule per invocation, so each rule is scanned
+  # separately. That also keeps failures attributable to a single rule file.
+  rule_count=0
+  for rule in lints/*.yml; do
+    [[ -f "$rule" ]] || continue
+    rule_count=$((rule_count + 1))
+    if ! "$ast_grep_bin" scan --rule "$rule" crates; then
+      fail "$rule: project-specific pattern found; see the rule message"
+    fi
+  done
+
+  if ((rule_count == 0)); then
+    info "no ast-grep rules found in lints/"
+  fi
+
+  # Every custom rule must fail its bad fixture and pass its good fixture.
+  # Without this, a rule can rot into a no-op and the gate still looks green.
+  section "ast-grep rule fixtures"
+  fixture_failures=0
+  for rule in lints/*.yml; do
+    [[ -f "$rule" ]] || continue
+    name="$(basename -- "$rule" .yml)"
+    bad="lints/fixtures/bad/$name.rs"
+    good="lints/fixtures/good/$name.rs"
+
+    if [[ ! -f "$bad" || ! -f "$good" ]]; then
+      fixture_failures=$((fixture_failures + 1))
+      printf 'error: %s has no bad/good fixture pair in lints/fixtures/\n' "$rule" >&2
+      continue
+    fi
+
+    if "$ast_grep_bin" scan --rule "$rule" "$bad" >/dev/null 2>&1; then
+      fixture_failures=$((fixture_failures + 1))
+      printf 'error: %s did not flag its bad fixture %s\n' "$rule" "$bad" >&2
+    fi
+
+    if ! "$ast_grep_bin" scan --rule "$rule" "$good" >/dev/null 2>&1; then
+      fixture_failures=$((fixture_failures + 1))
+      printf 'error: %s flagged its good fixture %s\n' "$rule" "$good" >&2
+    fi
+  done
+
+  if ((fixture_failures > 0)); then
+    fail "$fixture_failures lint-rule fixture problem(s); a rule and its fixtures disagree"
+  else
+    info "lint rule fixtures behave as documented"
+  fi
+else
+  skip "ast-grep"
+fi
+
+section "design tokens"
+if have python3; then
+  if ! python3 scripts/gen-design-tokens --check; then
+    fail "design tokens are stale or a contrast pair fails; see design/tokens.toml"
+  fi
+else
+  skip "python3 (design token check)"
+fi
+
+section "markdownlint"
+if have markdownlint; then
+  # Line length is disabled because the documentation uses tables and command
+  # examples that are clearer on one line.
+  if ! markdownlint --disable MD013 -- README.md CONTRIBUTING.md AGENTS.md \
+    THIRD-PARTY-NOTICES.md 'docs/**/*.md' 'format/**/*.md' 'packaging/**/*.md' \
+    'spikes/**/*.md'; then
+    fail "APORIA-5001: markdownlint reported a documentation problem"
+  fi
+elif have rumdl; then
+  if ! rumdl check .; then
+    fail "APORIA-5001: rumdl reported a documentation problem"
+  fi
+else
+  skip "markdownlint or rumdl"
+fi
+
+section "shellcheck"
+if have shellcheck; then
+  if ! shellcheck scripts/lint scripts/lean-lint; then
+    fail "shellcheck reported a shell problem in scripts/"
+  fi
+else
+  skip "shellcheck"
+fi
+
+section "actionlint"
+if have actionlint; then
+  if ! actionlint; then
+    fail "actionlint reported a problem in .github/workflows/"
+  fi
+else
+  skip "actionlint"
+fi
+
+if ((failures > 0)); then
+  printf '\nerror: lint gate failed with %d finding group(s)\n' "$failures" >&2
+  printf 'error: read the matching docs/lints/APORIA-xxxx.md page before fixing\n' >&2
+  exit 1
+fi
+
+printf '\ninfo: lint gate passed\n'

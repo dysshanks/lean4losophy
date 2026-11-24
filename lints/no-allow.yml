@@ -1,0 +1,19 @@
+id: no-allow-attribute
+language: Rust
+severity: error
+message: "APORIA-1009: #[allow(...)] hides debt; use #[expect(..., reason = \"APORIA-xxxx: ...\")]"
+note: |
+  Suppressions must be visible, carry an APORIA code and a reason, and expire
+  when the lint stops applying. `#[expect]` warns when the exception becomes
+  stale. A whole-file or whole-crate exception needs an ADR. See
+  docs/lints/APORIA-1009.md.
+# No `files:` filter: scripts/lint scans `crates`, and the rule fixtures are
+# scanned explicitly so the rule itself stays testable.
+rule:
+  any:
+    - all:
+        - kind: attribute_item
+        - regex: '\ballow\b'
+    - all:
+        - kind: inner_attribute_item
+        - regex: '\ballow\b'

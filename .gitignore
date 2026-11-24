@@ -1,0 +1,49 @@
+# Rust build output
+target/
+**/*.rs.bk
+
+# Coverage and profiling artifacts
+*.profraw
+*.profdata
+lcov.info
+perf.data
+perf.data.old
+tarpaulin-report.html
+
+# Notebook cache and local state
+.aporia/
+
+# Lean build output
+.lake/
+lake-packages/
+*.olean
+*.ilean
+
+# Packaging output
+dist/
+build/
+*.flatpak
+*.flatpakref
+*.AppImage
+
+# Environment and local configuration
+.env
+.env.*
+!.env.example
+
+# Editors and operating systems
+.vscode/
+.idea/
+*.iml
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# Local tool caches
+.cache/
+.direnv/
+.result/
+__pycache__/
+*.pyc

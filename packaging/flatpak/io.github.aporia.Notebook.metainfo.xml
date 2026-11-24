@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- AppStream metadata. Release entries are added at M7; screenshots and the
+     final name wait for the naming decision (ADR-0003). -->
+<component type="desktop-application">
+  <id>io.github.aporia.Notebook</id>
+  <name>Aporia</name>
+  <summary>Local-first notebook for structured philosophical arguments</summary>
+
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>Apache-2.0</project_license>
+
+  <description>
+    <p>
+      Aporia is a notebook for reading, writing, and reasoning. Notes are plain
+      Markdown files in a folder you own, so they work with Git and any editor.
+    </p>
+    <p>
+      Arguments can be written as numbered premises and a conclusion, and a
+      map shows how they fit together. If you install Lean, an argument can be
+      formalized and machine-checked. Lean is optional: every note, argument,
+      search, and paper works without it.
+    </p>
+    <p>
+      No account, no telemetry, no analytics, and no crash uploads. The app
+      works offline by default.
+    </p>
+    <ul>
+      <li>Markdown notes with wiki links, backlinks, and full-text search</li>
+      <li>Structured argument blocks and a read-only argument map</li>
+      <li>Optional Lean 4 diagnostics and theorem skeletons</li>
+      <li>Papers typeset with Typst, exported as PDF, Markdown, or DOCX</li>
+    </ul>
+  </description>
+
+  <launchable type="desktop-id">io.github.aporia.Notebook.desktop</launchable>
+  <provides>
+    <binary>aporia</binary>
+  </provides>
+  <categories>
+    <category>Office</category>
+    <category>Education</category>
+  </categories>
+  <content_rating type="oars-1.1"/>
+
+  <releases>
+    <release version="0.0.0" date="2026-11-24" type="development">
+      <description>
+        <p>Foundations milestone: no user-facing release yet.</p>
+      </description>
+    </release>
+  </releases>
+
+  <!-- Disclosed because Flatpak permissions are static (ADR-0003): the app
+       requests network access for an opt-in update check and a consented Lean
+       download, and makes no other outbound calls. -->
+  <custom>
+    <value key="flathub::manifest">
+      <url>https://github.com/aporia-notebook/aporia/blob/main/packaging/flatpak/io.github.aporia.Notebook.yml</url>
+    </value>
+  </custom>
+</component>
