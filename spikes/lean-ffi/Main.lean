@@ -7,40 +7,40 @@
 
   Ownership:
     - `@& String` arguments are borrowed by C for the duration of the call.
-    - `USize` handles are opaque pointers to the C-side `AporiaApp`.
+    - `USize` handles are opaque pointers to the C-side `Lean4losophyApp`.
     - Every call returns an `IO` result; C wraps failures with
       `lean_io_result_mk_error`.
 -/
 
-@[extern "aporia_gtk_init"]
+@[extern "lean4losophy_gtk_init"]
 opaque gtkInit : IO Unit
 
-@[extern "aporia_window_new"]
+@[extern "lean4losophy_window_new"]
 opaque windowNew : @& String → IO USize
 
-@[extern "aporia_window_set_text"]
+@[extern "lean4losophy_window_set_text"]
 opaque windowSetText : USize → @& String → IO Unit
 
-@[extern "aporia_window_get_text"]
+@[extern "lean4losophy_window_get_text"]
 opaque windowGetText : USize → IO String
 
-@[extern "aporia_window_run"]
+@[extern "lean4losophy_window_run"]
 opaque windowRun : USize → IO UInt32
 
-@[extern "aporia_window_free"]
+@[extern "lean4losophy_window_free"]
 opaque windowFree : USize → IO Unit
 
 /-- Called from C after a successful save. This is the GTK → Lean callback
     that the Plan A spike exists to prove. -/
-@[export aporia_on_save]
+@[export lean4losophy_on_save]
 def onSave (text : String) : IO Unit := do
   IO.println s!"[lean] save requested ({text.length} characters)"
 
 def main : IO Unit := do
   gtkInit
-  let window ← windowNew "Aporia — Lean FFI spike"
+  let window ← windowNew "lean4losophy — Lean FFI spike"
   windowSetText window
-    "# Aporia\n\nThis text is set from Lean through the C shim.\n\nOpen and save a file to exercise the GTK side.\n"
+    "# lean4losophy\n\nThis text is set from Lean through the C shim.\n\nOpen and save a file to exercise the GTK side.\n"
   let status ← windowRun window
   windowFree window
   if status != 0 then

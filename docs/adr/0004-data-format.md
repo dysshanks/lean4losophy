@@ -70,6 +70,34 @@ This ADR records the choices and points at `FORMAT.md`. Where the two disagree, 
 - The SQLite cache at `.aporia/cache.sqlite` is disposable. It carries `PRAGMA user_version`; a missing, stale, or corrupt cache triggers a rebuild from the files.
 - Encoding is UTF-8 with LF line endings. Invalid UTF-8 is rejected with a clear error, not replaced.
 
+## M2 implementation note (2026-11-24)
+
+Links, backlinks, and search are implemented against this ADR and `FORMAT.md`:
+
+- The cache is `rusqlite` with the **bundled** SQLite, so the Flatpak does not
+depend on a host SQLite. `rusqlite` 0.41 / `libsqlite3-sys` 0.39 bundle SQLite
+  3.54+, which fixes RUSTSEC-2026-0459; this raises the workspace MSRV to Rust
+  1.89. Linking the system library was rejected because its version varies by
+  distribution and would reintroduce the same advisory on older hosts.
+- The schema follows `FORMAT.md` section 12. One column was added:
+  `headings.line`, so a `[[Note#Heading]]` link can open at the heading. The
+  cache is disposable and still carries `user_version = 1`; no released cache
+  exists to migrate.
+- Link resolution is computed when the index syncs: ID, then title, then alias,
+  then path, with case-insensitive path matches reported as ambiguous even when
+  only one file matches. A heading or block fragment that does not exist marks
+  the link broken.
+- Renames rewrite only incoming links whose target matched the old path. Links
+  that resolved by title or alias are left as written, exactly as section 5.5
+  requires, and still resolve after the move.
+- A rebuild writes `cache.sqlite.tmp`, syncs it, and renames it over the cache;
+  the old `-wal`/`-shm` files are removed first. Incremental sync removes rows
+  for vanished files before inserting, so a renamed note cannot collide with
+  its old row on the unique id.
+- The index is opened and searched on the UI thread. Search is debounced and
+  measured at 11 ms for 10,000 notes; a full rebuild blocks for about 3.4 s and
+  is scheduled to move to a worker in the M7 performance pass.
+
 ## Consequences
 
 Positive:

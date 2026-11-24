@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 # SPDX-License-Identifier: Apache-2.0
-# Copyright 2026 The Aporia Authors
+# Copyright 2026 The lean4losophy Authors
 #
 # Scan the shipped Lean library for constructs banned by LINT-POLICY.md.
-# User notebooks are exempt; this checks only lean/Aporia.
-# Exits nonzero on any finding. A missing lean/Aporia directory is not a
+# User notebooks are exempt; this checks only lean/Lean4losophy.
+# Exits nonzero on any finding. A missing lean/Lean4losophy directory is not a
 # failure, because the Lean library arrives after the Rust notes shell.
 
 set -euo pipefail
@@ -12,7 +12,7 @@ set -euo pipefail
 repo_root="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)"
 cd -- "$repo_root"
 
-lean_dir="lean/Aporia"
+lean_dir="lean/Lean4losophy"
 
 if [[ ! -d "$lean_dir" ]]; then
   printf 'info: %s not present; skipping Lean library scan\n' "$lean_dir"

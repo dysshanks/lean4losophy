@@ -1,17 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- AppStream metadata. Release entries are added at M7; screenshots and the
-     final name wait for the naming decision (ADR-0003). -->
+<!-- AppStream metadata. Release entries and screenshots are added before the
+     first release (ADR-0003). The name and app ID are final. -->
 <component type="desktop-application">
-  <id>io.github.aporia.Notebook</id>
-  <name>Aporia</name>
+  <id>io.github.dysshanks.lean4losophy</id>
+  <name>lean4losophy</name>
   <summary>Local-first notebook for structured philosophical arguments</summary>
 
   <metadata_license>CC0-1.0</metadata_license>
   <project_license>Apache-2.0</project_license>
 
+  <developer id="io.github.dysshanks">
+    <name>The lean4losophy Authors</name>
+  </developer>
+  <url type="homepage">https://github.com/dysshanks/lean4losophy</url>
+
   <description>
     <p>
-      Aporia is a notebook for reading, writing, and reasoning. Notes are plain
+      lean4losophy is a notebook for reading, writing, and reasoning. Notes are plain
       Markdown files in a folder you own, so they work with Git and any editor.
     </p>
     <p>
@@ -32,9 +37,9 @@
     </ul>
   </description>
 
-  <launchable type="desktop-id">io.github.aporia.Notebook.desktop</launchable>
+  <launchable type="desktop-id">io.github.dysshanks.lean4losophy.desktop</launchable>
   <provides>
-    <binary>aporia</binary>
+    <binary>lean4losophy</binary>
   </provides>
   <categories>
     <category>Office</category>
@@ -55,7 +60,7 @@
        download, and makes no other outbound calls. -->
   <custom>
     <value key="flathub::manifest">
-      <url>https://github.com/aporia-notebook/aporia/blob/main/packaging/flatpak/io.github.aporia.Notebook.yml</url>
+      <url>https://github.com/dysshanks/lean4losophy/blob/main/packaging/flatpak/io.github.dysshanks.lean4losophy.yml</url>
     </value>
   </custom>
 </component>

@@ -24,7 +24,7 @@ struct Shell {
 pub fn build(app: &gtk::Application) {
     let window = gtk::ApplicationWindow::builder()
         .application(app)
-        .title("Aporia — GTK shell spike")
+        .title("lean4losophy — GTK shell spike")
         .default_width(1100)
         .default_height(720)
         .build();
@@ -241,13 +241,13 @@ fn load_file(shell: &Shell, file: gio::File) {
                 let name = file_name(&source);
                 shell.title.set_label(&name);
                 shell.status.set_label(&format!("Opened {name}"));
-                shell.window.set_title(Some(&format!("{name} — Aporia spike")));
+                shell.window.set_title(Some(&format!("{name} — lean4losophy spike")));
                 *shell.current_file.borrow_mut() = Some(source);
             }
             Err(_) => show_error(
                 &shell.window,
                 "Could not open note",
-                "The selected file is not valid UTF-8. Aporia stores notes as UTF-8.",
+                "The selected file is not valid UTF-8. lean4losophy stores notes as UTF-8.",
             ),
         },
         Err(error) => show_error(
@@ -315,7 +315,7 @@ fn write_file(shell: &Shell, file: gio::File) {
                 shell.status.set_label(&format!("Saved {name}"));
                 shell
                     .window
-                    .set_title(Some(&format!("{name} — Aporia spike")));
+                    .set_title(Some(&format!("{name} — lean4losophy spike")));
             }
             Err((_bytes, error)) => show_error(
                 &shell.window,

@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: Apache-2.0
-// Copyright 2026 The Aporia Authors
+// Copyright 2026 The lean4losophy Authors
 
 //! Preview block tests: the supported CommonMark subset, tables, footnotes, and
 //! the rule that raw HTML never reaches the renderer.
 
-use aporia_core::preview::{Block, blocks};
+use lean4losophy_core::preview::{Block, blocks};
 
 #[test]
 fn headings_and_paragraphs() {

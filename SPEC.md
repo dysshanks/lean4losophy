@@ -1,6 +1,6 @@
 # Philosophy Notebook — Spec Sheet
 
-**Working title:** Aporia (placeholder)
+**Name:** lean4losophy
 **Target:** Linux desktop, Wayland-first (X11 via XWayland as fallback only)
 **Core languages:** Rust (application) and Lean 4 (logic library and proof checking; see Decisions)
 **Version:** 0.1 draft
@@ -12,7 +12,7 @@ These are settled inputs. The linked documents carry the detail; anything not li
 - **v1 scope:** section 17.3's **In** list. Everything else is post-v1.
 - **No account, no login, no telemetry.** Offline by default.
 - **License:** Apache-2.0.
-- **Name:** deferred; "Aporia" is a working title until the name is fixed before Flathub submission.
+- **Name:** lean4losophy (final); app ID `io.github.dysshanks.lean4losophy`.
 - **Architecture:** Plan B (Rust GTK4 UI with Lean as an optional sidecar over LSP) is recommended; Plan A (Lean with a C FFI to GTK) is the alternative. Decided at Gate G0; see section 5 and `docs/adr/0001-ui-architecture.md`.
 - **Data format:** `FORMAT.md` is the source of truth for the on-disk format; section 7 is a summary.
 - **Project sources:** `DESIGN-PLAN.md` defines the visual and paper rules; `LINT-POLICY.md` defines the `APORIA-xxxx` lint gate. Both are binding.
@@ -98,8 +98,8 @@ Important constraint: Lean 4 has no mature GUI toolkit. The design keeps Lean wh
 
 | Layer | Choice | Notes |
 | --- | --- | --- |
-| Application and notebook core | Rust library (`aporia-core`) | Parser for note files, argument model, link index, search, settings |
-| Logic library | Lean 4 library (`Aporia.Core`), shipped as source | Propositional and first-order helpers, theorem skeleton generator |
+| Application and notebook core | Rust library (`lean4losophy-core`) | Parser for note files, argument model, link index, search, settings |
+| Logic library | Lean 4 library (`Lean4losophy.Core`), shipped as source | Propositional and first-order helpers, theorem skeleton generator |
 | Proof checking | Lean 4 sidecar (`lake serve`, LSP) | Optional; one long-lived process per notebook, started by the app when Lean is installed |
 | UI | GTK4 + libadwaita in Rust (`gtk4-rs`), native Wayland backend | No Lean runtime in the UI process |
 | Editor widget | GtkSourceView 5 | Markdown highlighting, Lean highlighting via a custom language definition |
@@ -196,11 +196,11 @@ release. Product code starts only after Gate G0 and G1 pass.
 - **Mathlib:** not in v1. The library uses Lean core; an opt-in Mathlib module is post-v1.
 - **Argument block syntax:** a plain Markdown list convention, not a custom fenced syntax. The grammar is frozen in `FORMAT.md`.
 - **License:** Apache-2.0.
+- **Name and app ID:** lean4losophy; app ID `io.github.dysshanks.lean4losophy`.
 
 **Open:**
 
 - **Architecture:** Plan A (Lean with a C FFI to GTK) or Plan B (Rust GTK4 UI with a Lean sidecar). Plan B is recommended; decided at Gate G0. See `docs/adr/0001-ui-architecture.md`.
-- **Name and app ID:** deferred until before Flathub submission; "Aporia" is a working title.
 
 ## 14. Paper Composer and Professional Typesetting (added)
 

@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 # SPDX-License-Identifier: Apache-2.0
-# Copyright 2026 The Aporia Authors
+# Copyright 2026 The lean4losophy Authors
 """Minimal LSP probe for the M0 Lean spike.
 
-Starts `lake serve`, opens Aporia/Spike.lean, waits for diagnostics, and prints
+Starts `lake serve`, opens Lean4losophy/Spike.lean, waits for diagnostics, and prints
 them. Exits nonzero when initialization or diagnostics fail.
 
 This is spike code, not product code: it speaks just enough JSON-RPC to prove
-the lifecycle. The real client lives in crates/aporia-lean at M4.
+the lifecycle. The real client lives in crates/lean4losophy-lean at M4.
 """
 
 from __future__ import annotations
@@ -21,7 +21,7 @@ import time
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
-TARGET = HERE / "Aporia" / "Spike.lean"
+TARGET = HERE / "Lean4losophy" / "Spike.lean"
 TIMEOUT = float(os.environ.get("LEAN_TIMEOUT", "120"))
 
 
@@ -161,7 +161,7 @@ def main() -> int:
         return 1
 
     found = client.diagnostics.get(TARGET.as_uri(), [])
-    print(f"Aporia/Spike.lean: {len(found)} diagnostics")
+    print(f"Lean4losophy/Spike.lean: {len(found)} diagnostics")
     for diagnostic in found:
         start = diagnostic.get("range", {}).get("start", {})
         severity = {1: "error", 2: "warning", 3: "info", 4: "hint"}.get(

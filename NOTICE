@@ -1,12 +1,12 @@
-Aporia (working title)
-Copyright 2026 The Aporia Authors
+lean4losophy
+Copyright 2026 The lean4losophy Authors
 
-This product includes software developed by The Aporia Authors.
+This product includes software developed by The lean4losophy Authors.
 
-The Aporia application and its first-party crates are licensed under the
+The lean4losophy application and its first-party crates are licensed under the
 Apache License, Version 2.0. See LICENSE for the full text.
 
 Third-party dependencies remain under their own copyrights and licenses.
 Dependency licenses are checked by cargo-deny as part of the lint gate.
 
-The Aporia name is a working title and is not a trademark claim.
+The lean4losophy name is final; no trademark claim is made.

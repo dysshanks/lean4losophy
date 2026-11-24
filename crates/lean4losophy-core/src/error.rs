@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: Apache-2.0
-// Copyright 2026 The Aporia Authors
+// Copyright 2026 The lean4losophy Authors
 
 //! Typed errors for every fallible operation in the core.
 //!
@@ -100,6 +100,14 @@ pub enum Error {
     /// The home directory could not be determined for the config path.
     #[error("could not determine a config directory: set XDG_CONFIG_HOME or HOME")]
     NoConfigDir,
+
+    /// The derived notebook index failed. The cache is rebuildable, so this is
+    /// never a reason to lose a note.
+    #[error("notebook index: {message}")]
+    Index {
+        /// A message from SQLite or from the indexer.
+        message: String,
+    },
 }
 
 /// The core result type.

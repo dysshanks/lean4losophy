@@ -2,7 +2,7 @@
 
 **Severity:** error
 **Tool:** `scripts/lean-lint` banned-token scan, review
-**Scope:** `lean/Aporia`; user notebooks are exempt, but their axioms are not imported into the library.
+**Scope:** `lean/Lean4losophy`; user notebooks are exempt, but their axioms are not imported into the library.
 
 ## Why
 

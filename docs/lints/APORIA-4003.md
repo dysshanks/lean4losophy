@@ -2,7 +2,7 @@
 
 **Severity:** error
 **Tool:** `scripts/lean-lint` banned-token scan, `lake build`, review
-**Scope:** `lean/Aporia`, the shipped library; tests and user notebooks are exempt.
+**Scope:** `lean/Lean4losophy`, the shipped library; tests and user notebooks are exempt.
 
 ## Why
 
@@ -20,7 +20,7 @@ The likely use here is the counterexample finder and the truth-table helpers, wh
 ## Exceptions
 
 - The Lean owner may approve `native_decide` in a test or tooling module, with a reason and an issue, when a kernel proof is impractical.
-- No exception for `Aporia.Core`, for any lemma used by `by_valid`, or for anything cited in a paper appendix.
+- No exception for `Lean4losophy.Core`, for any lemma used by `by_valid`, or for anything cited in a paper appendix.
 - If performance forces it, the ADR must include an independent kernel check of the same statement.
 
 ## Examples

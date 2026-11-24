@@ -7,6 +7,7 @@ Short set. Most questions are one click. Answer boxes are used only where a list
 - No account or login.
 - No telemetry; offline by default.
 - Lean is optional; the app works fully without it.
+- Name: lean4losophy (final).
 - Typst is the paper typesetting engine.
 - v1 is section 17.3’s recommended first release. Anything outside its **In** list is out for v1.
 - The first prototype is the notes shell: GTK4 window, Markdown editor, open and save a notebook folder.
@@ -164,10 +165,9 @@ Flatpak and Nix/AUR normally handle their own updates. You chose in-app updates.
 - [ ] Undecided
 - [ ] Other: ______________________________________________
 
-### Q19. Name (open question 13)
+### Q19. Name (settled)
 
-- [ ] Keep Aporia
-- [x] Decide later
+- [x] lean4losophy
 - [ ] Other: ______________________________________________
 
 ---

@@ -20,14 +20,14 @@
 - Only the FFI crate may carry `#[expect(unsafe_code, reason = "APORIA-1001: ...; ADR-000x")]`.
 - Each block needs a `// SAFETY:` comment and security review by the owner.
 - A whole-crate exception needs an ADR and is revisited at every milestone.
-- No exception for `aporia-core`, `aporia-paper`, `aporia-lean`, or the GTK app crate.
+- No exception for `lean4losophy-core`, `lean4losophy-paper`, `lean4losophy-lean`, or the GTK app crate.
 
 ## Examples
 
 Bad:
 
 ```rust
-// aporia-core: trust a buffer from the Lean runtime
+// lean4losophy-core: trust a buffer from the Lean runtime
 let title = unsafe { std::str::from_utf8_unchecked(bytes) };
 ```
 

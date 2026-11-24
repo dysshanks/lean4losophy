@@ -1,10 +1,10 @@
 [Desktop Entry]
 Type=Application
-Name=Aporia
+Name=lean4losophy
 GenericName=Philosophy Notebook
 Comment=Local-first notebook for structured philosophical arguments
-Exec=aporia %U
-Icon=io.github.aporia.Notebook
+Exec=lean4losophy %U
+Icon=io.github.dysshanks.lean4losophy
 Terminal=false
 Categories=Office;Education;
 Keywords=notes;markdown;logic;philosophy;arguments;

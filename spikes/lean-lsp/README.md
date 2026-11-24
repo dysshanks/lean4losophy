@@ -13,7 +13,7 @@ run against the pinned toolchain and its output is pasted below.
 1. Starts `lake serve` in this directory (the JSON-RPC/LSP server built into
    Lake).
 2. Sends `initialize`, then `initialized`, then `textDocument/didOpen` for
-   `Aporia/Spike.lean`, which contains one intentional type error.
+   `Lean4losophy/Spike.lean`, which contains one intentional type error.
 3. Waits for `textDocument/publishDiagnostics` for that file.
 4. Prints the diagnostics and exits nonzero if none arrive within the timeout.
 
@@ -35,7 +35,7 @@ fetched by `elan` on first use.
 
 ```text
 initialize: ok
-Aporia/Spike.lean: 2 diagnostics
+Lean4losophy/Spike.lean: 2 diagnostics
   (4, 24) error: type mismatch ...
   (9, 8) warning: declaration uses 'sorry'
 spike: diagnostics received
@@ -45,7 +45,7 @@ Record the actual output and the toolchain version in this file when it runs.
 
 ## Why this spike is separate
 
-The app's Lean client (`crates/aporia-lean`, M4) depends on three things this
+The app's Lean client (`crates/lean4losophy-lean`, M4) depends on three things this
 spike checks without building the app: the `lake serve` lifecycle, the exact
 diagnostic payload shape for a generated file, and whether a pinned toolchain
 needs a network fetch on first run. A failure here is cheap; a failure in M4 is

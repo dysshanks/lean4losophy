@@ -1,4 +1,4 @@
-# FORMAT.md — Aporia notebook format
+# FORMAT.md — lean4losophy notebook format
 
 **Version:** 1 (draft, v0.1)
 **Status:** Normative for the bytes on disk once `format: 1` is accepted.
@@ -10,7 +10,9 @@ The key words MUST, MUST NOT, SHOULD, and MAY are used as in RFC 2119.
 
 A notebook is a directory the user owns. Every non-derived file in it is UTF-8
 text that a human can read, diff, and edit in another editor. Nothing in a
-notebook requires Aporia to be recoverable.
+notebook requires lean4losophy to be recoverable. The notebook state directory
+is named `.aporia/` for format-1 compatibility; that name is historical and is
+not the product name.
 
 ---
 
@@ -31,7 +33,7 @@ notebook requires Aporia to be recoverable.
 ├── lean/                  # optional Lake project, see section 10
 │   ├── lean-toolchain
 │   ├── lakefile.lean
-│   └── Aporia/
+│   └── Lean4losophy/
 └── .aporia/               # optional app state; safe to delete except settings
     ├── settings.toml      # notebook settings, see section 11
     └── cache.sqlite       # derived index, see section 12
@@ -335,8 +337,8 @@ papers/<paper-slug>/
 The optional Lean project lives at `lean/` and is a normal Lake project.
 
 - `lean/lean-toolchain` pins the exact toolchain, one line.
-- `lean/lakefile.lean` declares the package and the `Aporia` library.
-- `lean/Aporia/` holds the shipped library, copied into the notebook without
+- `lean/lakefile.lean` declares the package and the `lean4losophy` library.
+- `lean/Lean4losophy/` holds the shipped library, copied into the notebook without
   overwriting files the user has edited.
 - Generated note modules go under `lean/notes/` and are derived: the app may
   rewrite them freely. They are not the source of truth.
@@ -365,7 +367,7 @@ theorem mortal (h : Human socrates) : Mortal socrates := by
 
 ### 11.1 Global config
 
-Location: `$XDG_CONFIG_HOME/aporia/config.toml` (`~/.config/aporia/config.toml`
+Location: `$XDG_CONFIG_HOME/lean4losophy/config.toml` (`~/.config/lean4losophy/config.toml`
 when `XDG_CONFIG_HOME` is unset).
 
 ```toml
@@ -457,6 +459,7 @@ CREATE TABLE headings (
     level    INTEGER NOT NULL,
     text     TEXT NOT NULL,
     anchor   TEXT NOT NULL,
+    line     INTEGER NOT NULL,       -- 1-based body line, for link navigation
     PRIMARY KEY (note_row, ordinal)
 );
 
@@ -568,3 +571,4 @@ Required properties:
 | Version | Date | Change |
 | --- | --- | --- |
 | 1 (draft v0.1) | 2026-11-24 | First written specification; freezes the M0 decisions |
+| 1 (draft v0.2) | 2026-11-24 | M2 implementation: cache `headings.line` for link navigation; link and backlink behavior exercised by fixtures |

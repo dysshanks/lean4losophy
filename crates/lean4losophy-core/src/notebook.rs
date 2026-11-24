@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: Apache-2.0
-// Copyright 2026 The Aporia Authors
+// Copyright 2026 The lean4losophy Authors
 
 //! A notebook: a user-owned folder of Markdown notes (`FORMAT.md` section 1).
 //!
@@ -232,9 +232,9 @@ impl Notebook {
             return Ok(());
         }
 
-        let mut welcome = self.create_note("Welcome to Aporia")?;
+        let mut welcome = self.create_note("Welcome to lean4losophy")?;
         welcome.set_body(
-            "# Welcome to Aporia\n\n\
+            "# Welcome to lean4losophy\n\n\
              This notebook is a folder of plain Markdown files. Edit them here or \
              in any text editor; nothing is locked away.\n\n\
              ## Try this\n\n\

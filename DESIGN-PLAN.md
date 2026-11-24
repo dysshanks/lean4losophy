@@ -3,6 +3,7 @@
 **Status:** Draft
 **Basis:** the rules supplied for this project, `SPEC.md`, and `IMPLEMENTATION-PLAN.md`
 **Scope:** the GTK4 application and the Typst paper templates/exports
+**Implementation status:** [`docs/UI-MAP.md`](docs/UI-MAP.md) maps every screen and rule to what the app currently implements, with documented exceptions and gaps.
 
 ## 1. Principles
 
@@ -11,6 +12,16 @@
 - Explicit actions: labels say what happens, and destructive actions are never next to safe ones.
 - One system: the app and the generated paper share typography, spacing, and color rules where the medium allows it.
 - Accessibility is part of the rule set, not a later pass.
+
+### Workbench direction
+
+The application is a deliberate mix of two products. VSCode supplies the dense,
+keyboard-first workbench: a persistent activity rail, a command center, a
+command palette, panel borders, and a truthful status bar. Obsidian supplies the
+content-first note canvas: plain Markdown, wiki links, backlinks, and a calm
+reading surface. `docs/UI-RULES.md` turns that direction into binding rules for
+layout, density, interaction, and review. The existing rules below still apply;
+the workbench rules add the chrome that carries them.
 
 ## 2. Rules and where they apply
 
@@ -61,6 +72,7 @@ Starting values, to be tuned visually:
 | Token | Light | Dark |
 | --- | --- | --- |
 | `bg` | blue-tinted near-white | blue-tinted near-black |
+| `panel` | blue-tinted panel, slightly darker than `bg` | blue-tinted panel, slightly darker than `bg` |
 | `surface` | white with a blue tint | elevated blue-tinted dark |
 | `text` | near-black with a blue tint | off-white with a blue tint |
 | `muted` | blue-tinted mid-grey | blue-tinted light-grey |

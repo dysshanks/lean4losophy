@@ -1,7 +1,7 @@
-# Clippy thresholds for the Aporia workspace.
+# Clippy thresholds for the lean4losophy workspace.
 # Lint levels live in [workspace.lints] in Cargo.toml; this file tunes limits.
 
-msrv = "1.85"
+msrv = "1.89"
 
 # A function longer than this is usually doing more than one job.
 too-many-lines-threshold = 100

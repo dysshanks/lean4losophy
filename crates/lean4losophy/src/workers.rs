@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: Apache-2.0
-// Copyright 2026 The Aporia Authors
+// Copyright 2026 The lean4losophy Authors
 
 //! Background workers for saving and preview rendering.
 //!
@@ -13,7 +13,7 @@ use std::path::PathBuf;
 use std::sync::mpsc::{self, Receiver, Sender};
 use std::thread;
 
-use aporia_core::preview::{self, Block};
+use lean4losophy_core::preview::{self, Block};
 
 /// A request to write a note file.
 pub struct SaveJob {
@@ -107,10 +107,10 @@ pub fn spawn_saver() -> (Saver, Receiver<SaveOutcome>) {
     let (out_tx, out_rx) = mpsc::channel::<SaveOutcome>();
 
     let spawned = thread::Builder::new()
-        .name(String::from("aporia-save"))
+        .name(String::from("lean4losophy-save"))
         .spawn(move || {
             while let Ok(job) = job_rx.recv() {
-                let outcome = match aporia_core::atomic::write_atomic(&job.path, &job.bytes) {
+                let outcome = match lean4losophy_core::atomic::write_atomic(&job.path, &job.bytes) {
                     Ok(()) => SaveOutcome::Saved {
                         path: job.path,
                         generation: job.generation,
@@ -146,7 +146,7 @@ pub fn spawn_renderer() -> (Renderer, Receiver<RenderOutcome>) {
     let (out_tx, out_rx) = mpsc::channel::<RenderOutcome>();
 
     let spawned = thread::Builder::new()
-        .name(String::from("aporia-preview"))
+        .name(String::from("lean4losophy-preview"))
         .spawn(move || {
             while let Ok(job) = job_rx.recv() {
                 let outcome = RenderOutcome {

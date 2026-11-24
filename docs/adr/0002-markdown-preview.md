@@ -35,7 +35,7 @@ The preview is the largest untrusted-content surface in the app. A note can come
 - Allowed: headings, paragraphs, emphasis, strong, lists, block quotes, code and pre, tables, footnotes, horizontal rules, links, and local images.
 - Removed: `script`, `style`, `iframe`, `object`, `embed`, `form`, `input`, `svg`, event-handler attributes, `javascript:` and `data:text/html` URLs, and inline `style` attributes.
 - Syntax-highlight classes are allowed from a generated list; no arbitrary class or id attributes.
-- Wiki links become internal navigation targets (`aporia://note/...` or an equivalent app-internal scheme), not file URLs.
+- Wiki links become internal navigation targets (`lean4losophy://note/...` or an equivalent app-internal scheme), not file URLs.
 - Lean and argument blocks render as cards. Lean source is displayed as text; it is never executed by the preview.
 
 ### Preview widget
@@ -68,7 +68,7 @@ development packages, and the app must build and run.
 What is in place:
 
 - One parser: comrak with only tables and footnotes enabled, in
-  `aporia_core::preview`. It produces an owned block model shared by the
+  `lean4losophy_core::preview`. It produces an owned block model shared by the
   renderer and future exporters.
 - The preview is a GTK widget tree built from those blocks. It performs no I/O,
   cannot load a remote image or font, and drops raw HTML at parse time. The

@@ -1,6 +1,6 @@
 # Third-Party Notices and License Review
 
-Aporia is Apache-2.0. `LICENSE` and `NOTICE` cover the project itself. This page
+lean4losophy is Apache-2.0. `LICENSE` and `NOTICE` cover the project itself. This page
 covers what we depend on, how it is distributed, and why each license is
 acceptable. It is reviewed when a dependency is added and at each gate.
 
@@ -32,10 +32,10 @@ not vendored into the repository, and their notices ship with the runtime.
 | GLib, GObject, Gio, Pango, Cairo, GdkPixbuf | LGPL-2.1-or-later | Flatpak runtime; distro package | Transitive system libraries. |
 | GtkSourceView 5 | LGPL-2.1-or-later | Flatpak runtime; distro package | Editor widget, M1. |
 | WebKitGTK 6.0 | LGPL-2.1-or-later plus BSD-2-Clause portions | Flatpak runtime; distro package | Preview widget, M1. Never bundled by us. |
-| SQLite | Public domain | Linked through `rusqlite` (MIT) or the system library | No notice required; recorded for completeness. |
+| SQLite | Public domain | Bundled through `rusqlite` 0.41 / `libsqlite3-sys` 0.39 (SQLite 3.54.1+) | No notice required; recorded for completeness. The bundled copy is required to be 3.54+ for RUSTSEC-2026-0459. Do not switch to a host SQLite without checking its version. |
 | Typst | Apache-2.0 | CLI or embedded library | Compatible. Version pinned in M6. |
 | Lean 4 toolchain | Apache-2.0 | Downloaded on demand with consent (ADR-0003) | Not bundled or distributed by us. The download shows source, version, size, and checksum. |
-| Lean core library source | Apache-2.0 | Shipped as source under `lean/Aporia/` | First-party files; Lean core itself is a dependency of the toolchain. |
+| Lean core library source | Apache-2.0 | Shipped as source under `lean/Lean4losophy/` | First-party files; Lean core itself is a dependency of the toolchain. |
 | Pandoc | GPL-2.0-or-later | **Not bundled** | DOCX export uses a host-installed Pandoc only, or a native exporter decided in M6. Bundling it in the Flatpak would impose GPL obligations on the distribution, so it is explicitly out of scope for the bundle. |
 | Libertinus Serif, EB Garamond, Source Serif | SIL OFL-1.1 | Bundled with the paper templates in M6 | OFL permits bundling and modification; the font names are reserved. Notices go in this file and the app's about dialog. |
 | Adwaita icon theme | LGPL-3.0-or-later or CC-BY-SA-3.0 | Flatpak runtime | Runtime-provided. |

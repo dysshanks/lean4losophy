@@ -6,7 +6,7 @@ LEAN_PREFIX := $(shell lean --print-prefix 2>/dev/null)
 LEAN_CFLAGS := $(if $(LEAN_PREFIX),-I$(LEAN_PREFIX)/include,)
 
 BUILD_DIR := build/ffi
-ARCHIVE := $(BUILD_DIR)/libaporiffi.a
+ARCHIVE := $(BUILD_DIR)/liblean4losophyffi.a
 OBJECTS := $(BUILD_DIR)/ffi.o $(BUILD_DIR)/lean_bridge.o
 
 .PHONY: all check-c build run clean
@@ -33,7 +33,7 @@ build: check-c $(ARCHIVE)
 	$(LAKE) build
 
 run: build
-	$(LAKE) exe aporiaFfi
+	$(LAKE) exe lean4losophyFfi
 
 clean:
 	rm -rf build .lake

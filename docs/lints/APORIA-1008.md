@@ -18,12 +18,12 @@ tracing::debug!(note_id = %note.id, bytes = text.len(), "saving note");
 
 - Attach a span to a long operation so timing lands in the local log.
 - Report errors through the UI error channel, not stdout.
-- For intentional machine output, use the CLI output module in `aporia-cli`.
+- For intentional machine output, use the CLI output module in `lean4losophy-cli`.
 
 ## Exceptions
 
 - No exception for logging note content, paths under a user's home, or Lean source.
-- An intentional stdout path (for example `aporia export --stdout`) needs owner approval, a reason, an issue, and a test asserting the exact bytes.
+- An intentional stdout path (for example `lean4losophy export --stdout`) needs owner approval, a reason, an issue, and a test asserting the exact bytes.
 - Logs stay local; anything else also needs APORIA-3001 and APORIA-3002 review.
 
 ## Examples

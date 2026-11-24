@@ -1,5 +1,5 @@
-#ifndef APORIA_FFI_H
-#define APORIA_FFI_H
+#ifndef LEAN4LOSOPHY_FFI_H
+#define LEAN4LOSOPHY_FFI_H
 
 /*
  * Plain C surface of the Plan A spike.
@@ -9,14 +9,14 @@
  * compiled and reviewed without a Lean toolchain.
  *
  * Threading: every function must be called from the thread that runs
- * `aporia_app_run`. GTK is not thread-safe.
+ * `lean4losophy_app_run`. GTK is not thread-safe.
  *
  * Ownership:
- *   - `aporia_app_new` returns an owned pointer, released with
- *     `aporia_app_free`.
+ *   - `lean4losophy_app_new` returns an owned pointer, released with
+ *     `lean4losophy_app_free`.
  *   - Strings passed in are borrowed for the duration of the call.
- *   - `aporia_app_get_text` returns an owned string, released with
- *     `aporia_string_free`.
+ *   - `lean4losophy_app_get_text` returns an owned string, released with
+ *     `lean4losophy_string_free`.
  *   - The save callback's `text` is borrowed for the duration of the call.
  */
 
@@ -27,36 +27,36 @@
 extern "C" {
 #endif
 
-typedef struct AporiaApp AporiaApp;
+typedef struct Lean4losophyApp Lean4losophyApp;
 
-typedef void (*AporiaSaveCallback)(const char *text, void *user_data);
+typedef void (*lean4losophySaveCallback)(const char *text, void *user_data);
 
 /* Initialises GTK. Returns false when no display is available. */
-bool aporia_platform_init(void);
+bool lean4losophy_platform_init(void);
 
 /* Creates the window and its widgets. Returns NULL on allocation failure. */
-AporiaApp *aporia_app_new(const char *title);
+Lean4losophyApp *lean4losophy_app_new(const char *title);
 
 /* Releases the app. Must not be called while the main loop is running. */
-void aporia_app_free(AporiaApp *app);
+void lean4losophy_app_free(Lean4losophyApp *app);
 
 /* Replaces the editor contents. */
-void aporia_app_set_text(AporiaApp *app, const char *text);
+void lean4losophy_app_set_text(Lean4losophyApp *app, const char *text);
 
-/* Returns a copy of the editor contents; free with `aporia_string_free`. */
-char *aporia_app_get_text(const AporiaApp *app);
+/* Returns a copy of the editor contents; free with `lean4losophy_string_free`. */
+char *lean4losophy_app_get_text(const Lean4losophyApp *app);
 
-void aporia_string_free(char *text);
+void lean4losophy_string_free(char *text);
 
 /* Registers the callback invoked after a successful save. May be NULL. */
-void aporia_app_set_save_callback(AporiaApp *app, AporiaSaveCallback callback,
+void lean4losophy_app_set_save_callback(Lean4losophyApp *app, lean4losophySaveCallback callback,
                                   void *user_data);
 
 /* Runs the GTK main loop. Returns the process exit status. */
-int aporia_app_run(AporiaApp *app);
+int lean4losophy_app_run(Lean4losophyApp *app);
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* APORIA_FFI_H */
+#endif /* LEAN4LOSOPHY_FFI_H */

@@ -10,7 +10,7 @@ missing:
 
 | Channel | Files | State |
 | --- | --- | --- |
-| Flatpak | `flatpak/io.github.aporia.Notebook.yml`, desktop entry, AppStream metadata | Manifest targets the M1 `aporia` binary. Not buildable until `cargo-sources.json` is generated; `flatpak-builder` is not installed here. |
+| Flatpak | `flatpak/io.github.dysshanks.lean4losophy.yml`, desktop entry, AppStream metadata | Manifest targets the `lean4losophy` binary. Not buildable until `cargo-sources.json` is generated; `flatpak-builder` is not installed here. |
 | Nix | `nix/flake.nix`, `nix/package.nix` | Builds the workspace with GTK4 and libadwaita inputs and installs the binary, desktop entry, and metainfo. Not executed: `nix` is not installed in the development environment. |
 | AUR | `aur/PKGBUILD` | Installs the M1 binary, desktop entry, metainfo, and licenses. `makepkg --printsrcinfo` parses it; it was not built from source here. |
 
@@ -36,8 +36,8 @@ python3 flatpak-cargo-generator.py Cargo.lock \
 
 # Build and run against the runtime.
 flatpak-builder --user --install --force-clean build-dir \
-  packaging/flatpak/io.github.aporia.Notebook.yml
-flatpak run io.github.aporia.Notebook
+  packaging/flatpak/io.github.dysshanks.lean4losophy.yml
+flatpak run io.github.dysshanks.lean4losophy
 ```
 
 Portal check: open a notebook from a folder outside the sandbox (Documents,
@@ -72,6 +72,6 @@ makepkg -si                          # build and install
 
 ## Naming
 
-The app ID `io.github.aporia.Notebook` is temporary. Flathub submission waits
-for the name decision (ADR-0003); the final ID is recorded in that ADR before
-M7.
+The product is **lean4losophy** and the app ID is
+`io.github.dysshanks.lean4losophy`. Flathub submission uses that ID; the
+desktop entry, metainfo, and Flatpak manifest are named after it.

@@ -1,4 +1,4 @@
-# Aporia design tokens.
+# lean4losophy design tokens.
 # Single source of truth for app and paper values (DESIGN-PLAN.md sections 3 and 7).
 # Edit only this file, then run: python3 scripts/gen-design-tokens
 #
@@ -11,6 +11,7 @@ neutral_hue = 220
 
 [color.light]
 bg             = { h = 220, s = 0.28, l = 0.955 }
+panel          = { h = 220, s = 0.20, l = 0.935 }
 surface        = { h = 220, s = 0.35, l = 0.990 }
 surface_raised = { h = 220, s = 0.25, l = 0.997 }
 border         = { h = 220, s = 0.15, l = 0.860 }
@@ -25,6 +26,7 @@ warning        = { h = 38,  s = 0.85, l = 0.360 }
 
 [color.dark]
 bg             = { h = 220, s = 0.13, l = 0.115 }
+panel          = { h = 220, s = 0.12, l = 0.100 }
 surface        = { h = 220, s = 0.12, l = 0.150 }
 surface_raised = { h = 220, s = 0.11, l = 0.195 }
 border         = { h = 220, s = 0.09, l = 0.270 }
@@ -53,6 +55,12 @@ theme = "light"
 [[contrast]]
 fg = "muted"
 bg = "bg"
+min = 4.5
+theme = "light"
+
+[[contrast]]
+fg = "muted"
+bg = "panel"
 min = 4.5
 theme = "light"
 
@@ -89,6 +97,12 @@ theme = "dark"
 [[contrast]]
 fg = "muted"
 bg = "bg"
+min = 4.5
+theme = "dark"
+
+[[contrast]]
+fg = "muted"
+bg = "panel"
 min = 4.5
 theme = "dark"
 

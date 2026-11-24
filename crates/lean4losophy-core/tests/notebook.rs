@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: Apache-2.0
-// Copyright 2026 The Aporia Authors
+// Copyright 2026 The lean4losophy Authors
 
 //! Behaviour tests for the M1 core: parse/render round trips, atomic writes,
 //! settings precedence, path safety, and notebook operations.
 
 use std::path::Path;
 
-use aporia_core::{
+use lean4losophy_core::{
     EffectiveSettings, GlobalConfig, Mode, Note, Notebook, NotebookSettings, PreviewLayout,
 };
 use tempfile::TempDir;
@@ -192,10 +192,10 @@ fn notebook_settings_round_trip_and_preserve_unknown_keys() -> TestResult {
     let original = "version = 1\nmode = \"expert\"\nfuture_setting = 42\n";
     std::fs::write(&path, original)?;
 
-    let mut settings = aporia_core::settings::load_notebook(notebook.root())?;
+    let mut settings = lean4losophy_core::settings::load_notebook(notebook.root())?;
     assert_eq!(settings.mode, Some(Mode::Expert));
     settings.autosave_ms = Some(600);
-    aporia_core::settings::save_notebook(notebook.root(), &settings)?;
+    lean4losophy_core::settings::save_notebook(notebook.root(), &settings)?;
 
     let written = std::fs::read_to_string(&path)?;
     assert!(written.contains("mode = \"expert\""));

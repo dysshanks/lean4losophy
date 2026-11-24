@@ -1,4 +1,4 @@
-# Implementation Plan — Aporia (working title)
+# Implementation Plan — lean4losophy
 
 **Status:** Draft
 **Basis:** `SPEC.md` and the answers in `OPEN-QUESTIONS.md`
@@ -18,7 +18,7 @@ These are treated as decided and are not reopened here:
 - The first prototype is the notes shell.
 - Install paths: Flatpak and Nix/AUR.
 - License: Apache-2.0.
-- Name: deferred; “Aporia” is a working title.
+- Name: lean4losophy (final); app ID `io.github.dysshanks.lean4losophy`.
 - Visual and paper rules are in `DESIGN-PLAN.md`.
 
 ## 2. Answers and impact
@@ -43,7 +43,7 @@ These are treated as decided and are not reopened here:
 | Q16 Platform | Any GTK4/Wayland distro | Flatpak runtime sets the floor; native builds tested on Ubuntu, Fedora, Arch |
 | Q17 Arguments | Markdown list convention | Grammar frozen in `FORMAT.md`, parsed from the AST |
 | Q18 License | Apache-2.0 | `LICENSE`, `NOTICE`, SPDX headers, dependency audit |
-| Q19 Name | Decide later | Public Flathub submission waits for the name |
+| Q19 Name | lean4losophy (final) | App ID `io.github.dysshanks.lean4losophy` used in packaging |
 
 **Answer notes:** Q7 and Q8 had multiple boxes checked; they are read as all listed tiers. Q13 had two boxes checked; this plan interprets them as: the app checks for updates on launch and shows a channel-specific action; Flatpak is updated through the store; Nix/AUR are updated by the user with in-app instructions. A true self-replacing binary is out of scope for v1.
 
@@ -131,13 +131,13 @@ Why this is recommended for an agent-built project:
 ├── AGENTS.md                   # instructions for coding agents
 ├── CONTRIBUTING.md             # human workflow
 ├── crates/
-│   ├── aporia/                 # GTK4 app, wiring, windows
-│   ├── aporia-core/            # notebook, Markdown, links, search, arguments
-│   ├── aporia-lean/            # toolchain manager, LSP client, diagnostics
-│   ├── aporia-paper/           # manuscript model, Typst, exports
-│   └── aporia-cli/             # optional headless commands and fixtures
+│   ├── lean4losophy/                 # GTK4 app, wiring, windows
+│   ├── lean4losophy-core/            # notebook, Markdown, links, search, arguments
+│   ├── lean4losophy-lean/            # toolchain manager, LSP client, diagnostics
+│   ├── lean4losophy-paper/           # manuscript model, Typst, exports
+│   └── lean4losophy-cli/             # optional headless commands and fixtures
 ├── lean/
-│   └── Aporia/                 # shipped Lean library
+│   └── lean4losophy/                 # shipped Lean library
 ├── format/
 │   └── FORMAT.md               # on-disk format spec
 ├── design/
@@ -260,7 +260,8 @@ and rewrites global config without error.
 Not yet verified: cold-start and typing-latency targets, the visual design
 checklist in light and dark mode, crash-during-save recovery (the write path is
 atomic but no kill test was run), and the preview's local-image and link paths.
-These are the M1 exit items before G2.
+These are the M1 exit items before G2. Per-screen implementation and rule
+status are tracked in `docs/UI-MAP.md`.
 
 ### Acceptance
 
@@ -280,24 +281,37 @@ These are the M1 exit items before G2.
 
 ### Tasks
 
-- [ ] Parse `[[Note]]`, `[[Note|alias]]`, `[[Note#Heading]]`, and `[[Note#^block]]`.
-- [ ] Resolve by stable ID, title, alias, then path; report ambiguous and broken links.
-- [ ] Create a note from a broken link; rename updates incoming links where possible.
-- [ ] Block IDs (`^id`) and heading anchors in the parser and index.
-- [ ] Backlinks pane with context; click to open at the reference.
-- [ ] SQLite schema: notes, links, tags, blocks, FTS5 index; `user_version` migrations.
-- [ ] Incremental indexing on save and external change; full rebuild when the cache is missing or stale.
-- [ ] Search: FTS5 ranking (`bm25`), snippets, tag and folder filters, keyboard navigation.
-- [ ] Index status and rebuild command in settings.
-- [ ] Performance fixture with 10,000 generated notes.
+- [x] Parse `[[Note]]`, `[[Note|alias]]`, `[[Note#Heading]]`, and `[[Note#^block]]` from the comrak AST; code spans, fenced blocks, and `![[...]]` never become links.
+- [x] Resolve by stable ID, title, alias, then path; ambiguous and broken links are reported with candidates and never resolved silently.
+- [x] Create a note from a broken link after confirmation; rename rewrites incoming links that resolved by path and leaves title/alias links alone.
+- [x] Block IDs (`^id`) on paragraphs, list items, quotes, tables, and Lean blocks; heading anchors normalized per `FORMAT.md` 5.4 with duplicate suffixes. Both are indexed with lines and masked out of the preview.
+- [x] Backlinks pane with source title, line, and context; click opens the source at the line.
+- [x] SQLite schema: notes, aliases, tags, headings, blocks, links, FTS5 index; `user_version` check and rebuild on mismatch. `headings.line` was added to the documented cache schema for navigation.
+- [x] Incremental indexing on save and external change; full rebuild when the cache is missing or stale, written to `cache.sqlite.tmp` and renamed.
+- [x] Search: FTS5 `bm25` with title weight, snippets, tag and folder filters, Enter or row click to open, Ctrl+F / Ctrl+K to focus.
+- [x] Index status and rebuild command (menu → Notebook index…), including the broken/ambiguous link list. It is a dialog, not inside a Preferences window.
+- [x] Performance fixture with 10,000 generated notes, now covering index build and search.
+
+### Status
+
+Measured on the 10,000-note fixture: full index build 3.39 s and search
+11.01 ms, against the 100 ms search target. The core has 8 index integration
+tests and 8 unit tests for link parsing, anchors, and block kinds; the earlier
+front-matter, notebook, and preview suites still pass.
+
+Indexing happens on the UI thread. Search is debounced and measured fast, but a
+full 10k rebuild blocks the window for about 3.4 s; moving indexing to a worker
+belongs to the M7 performance pass. Broken links are reported in the index
+dialog, not with an inline editor marker. The search list supports Enter and
+click; it has no custom arrow-key handler beyond normal GTK focus movement.
 
 ### Acceptance
 
-- All four link forms work; aliases and block references survive a restart.
-- Backlinks are correct after an in-app rename.
-- Search over 10,000 notes returns in under 100 ms.
-- Deleting `.aporia/cache.sqlite` loses no data and rebuilds.
-- The prototype is demoable end to end: create, link, search, reopen.
+- All four link forms work; aliases and block references survive a restart. **Met** (cache reopen is tested).
+- Backlinks are correct after an in-app rename. **Met**; path-resolved links are rewritten and title/alias links keep resolving.
+- Search over 10,000 notes returns in under 100 ms. **Met: 11.01 ms measured.**
+- Deleting `.aporia/cache.sqlite` loses no data and rebuilds. **Met.**
+- The prototype is demoable end to end: create, link, search, reopen. **The window launches with a linked notebook and builds its cache; the click-through itself was not exercised in this environment.**
 
 **Gate G3:** decide whether to continue to arguments or revise the notes model first.
 
@@ -338,7 +352,7 @@ These are the M1 exit items before G2.
 - [ ] Lean manager: detect an existing toolchain; offer a pinned download with size, version, source, checksum, progress, cancel, retry, remove.
 - [ ] Support a local Lean archive for offline install.
 - [ ] Store toolchains under the app data directory; show disk usage; never install system-wide.
-- [ ] Per-notebook Lake project: `lean/lean-toolchain`, `lakefile.lean`, `Aporia/` library, version marker.
+- [ ] Per-notebook Lake project: `lean/lean-toolchain`, `lakefile.lean`, `lean4losophy/` library, version marker.
 - [ ] Copy the bundled Lean library into the notebook without overwriting user edits.
 - [ ] LSP client: start `lake serve`, initialize, open/change documents, subscribe to diagnostics, request goals.
 - [ ] Extract Lean blocks from Markdown into generated files; keep a line/column map back to the note.
@@ -371,7 +385,7 @@ These are the M1 exit items before G2.
 ### Tasks
 
 - [ ] Propositional counterexample finder: truth tables for up to six letters; Valid, Not valid, or Can’t tell; plain-language model; under 2 s.
-- [ ] `Aporia.Core` Lean library: propositional and first-order helpers, readable notation, `Argument`, `by_valid`, tests, docs.
+- [ ] `Lean4losophy.Core` Lean library: propositional and first-order helpers, readable notation, `Argument`, `by_valid`, tests, docs.
 - [ ] Exercise engine: three sets (translation, proof step, fallacy); YAML content; hints; grading.
 - [ ] Save progress in the notebook; survive restart.
 - [ ] Guided mode: hints, simplified Lean view, error explanations; Expert mode hides them.
@@ -516,7 +530,7 @@ It runs:
 - `cargo-audit` and secret scanning.
 - `ast-grep` custom rules for project-specific patterns.
 - `typos`, `markdownlint`, `shellcheck`, and `actionlint`.
-- Lean build warnings-as-errors plus a scan of `lean/Aporia` for banned constructs.
+- Lean build warnings-as-errors plus a scan of `lean/Lean4losophy` for banned constructs.
 - A suppression audit that rejects bare `#[allow]` and undocumented exceptions.
 
 Every rule has a stable `APORIA-xxxx` code and a page in `docs/lints/` explaining what it catches, why it matters, the alternatives, and the exception process. Tool output that cannot emit the code is wrapped by `scripts/lint` so the final message still includes the code and doc link.
@@ -569,7 +583,7 @@ The policy and initial rule set are in `LINT-POLICY.md`.
 | Counterexample/`by_valid` tactics are not in Lean core | Medium | Verify in M4; vendor permissive dependencies or implement locally | M4 |
 | Lean code from an untrusted notebook executes | Critical | Sandbox, no network, resource limits, trust prompt | M4 |
 | Pandoc licensing/size blocks DOCX | Medium | Decide bundle vs host vs native exporter | M6 |
-| Name/app ID blocks Flathub | Medium | Decide the name before M7; use a temporary ID internally | M7 |
+| Flathub submission | Medium | Complete the G1 packaging builds before M7 | M7 |
 | Update check conflicts with “offline by default” | Medium | Consent toggle; single allowlisted call; document it | M7 |
 | Apache-2.0 incompatible with a dependency | Medium | License audit in P0; replace or relicense before code depends on it | G1 |
 | Lint rules are noisy or fight real code | Medium | Tune thresholds and document exceptions; never disable a rule silently | G1 |
@@ -603,7 +617,7 @@ The policy and initial rule set are in `LINT-POLICY.md`.
 These do not block P0 but must be closed by the stated gate:
 
 - Architecture: Plan A or B — G0.
-- Name and app ID — before Flathub submission in M7.
+- Flathub submission — after the G1 packaging builds, in M7.
 - Default citation style — M6.
 - DOCX path: bundled Pandoc, host Pandoc, or native exporter — M6.
 - Paper editor placement — M6.

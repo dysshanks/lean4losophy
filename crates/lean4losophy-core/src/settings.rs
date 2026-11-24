@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: Apache-2.0
-// Copyright 2026 The Aporia Authors
+// Copyright 2026 The lean4losophy Authors
 
 //! Settings split between the XDG config directory and the notebook
 //! (`FORMAT.md` section 11, ADR-0004).
@@ -87,7 +87,7 @@ impl PreviewLayout {
     }
 }
 
-/// Machine-local preferences in `$XDG_CONFIG_HOME/aporia/config.toml`.
+/// Machine-local preferences in `$XDG_CONFIG_HOME/lean4losophy/config.toml`.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(default)]
 pub struct GlobalConfig {
@@ -174,20 +174,20 @@ impl EffectiveSettings {
     }
 }
 
-/// The global config directory, `$XDG_CONFIG_HOME/aporia` or `~/.config/aporia`.
+/// The global config directory, `$XDG_CONFIG_HOME/lean4losophy` or `~/.config/lean4losophy`.
 ///
 /// # Errors
 ///
 /// Returns [`Error::NoConfigDir`] when neither variable is set.
 pub fn config_dir() -> Result<PathBuf> {
     if let Some(dir) = std::env::var_os("XDG_CONFIG_HOME").filter(|value| !value.is_empty()) {
-        return Ok(PathBuf::from(dir).join("aporia"));
+        return Ok(PathBuf::from(dir).join("lean4losophy"));
     }
 
     let home = std::env::var_os("HOME")
         .map(PathBuf::from)
         .ok_or(Error::NoConfigDir)?;
-    Ok(home.join(".config").join("aporia"))
+    Ok(home.join(".config").join("lean4losophy"))
 }
 
 /// The global config file path.

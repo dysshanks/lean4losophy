@@ -1,4 +1,4 @@
-# cargo-deny configuration for Aporia.
+# cargo-deny configuration for lean4losophy.
 # Enforced by ./scripts/lint and CI. See docs/lints/APORIA-3006.md and
 # docs/THIRD-PARTY-NOTICES.md for the license review behind this allowlist.
 

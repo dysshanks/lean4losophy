@@ -31,6 +31,9 @@ The goal is not to maximize the number of rules. The goal is that a failing mess
 
 `APORIA-<category><three digits>`
 
+Rule codes keep the historical `APORIA` prefix for stability; it is the lint
+namespace, not the product name (lean4losophy).
+
 | Range | Category |
 | --- | --- |
 | `APORIA-1xxx` | Safety and correctness |
@@ -53,7 +56,7 @@ Every failure should end up in this shape, even when the underlying tool has its
 
 ```text
 error[APORIA-1002]: `unwrap()` can abort the app
-  --> crates/aporia-core/src/note.rs:42:9
+  --> crates/lean4losophy-core/src/note.rs:42:9
   = why: a panic loses the user's unsaved note and gives no recovery path
   = help: use `?`, `ok_or`, or a typed error; see docs/lints/APORIA-1002.md
   = note: clippy::unwrap_used
@@ -206,7 +209,7 @@ This is the starting set. It grows when a real incident shows a gap. Codes are n
 
 | Code | Rule | Why | Alternative |
 | --- | --- | --- | --- |
-| APORIA-4001 | No `sorry` or `admit` in `Aporia.Core` | The library would claim proofs it does not have | Prove it, or mark the theorem as a hypothesis |
+| APORIA-4001 | No `sorry` or `admit` in `Lean4losophy.Core` | The library would claim proofs it does not have | Prove it, or mark the theorem as a hypothesis |
 | APORIA-4002 | No `axiom` without an ADR | Adds trust beyond the kernel | Prove it; use a documented typeclass assumption |
 | APORIA-4003 | No `native_decide` in the core | Trusts the compiler and native execution | Kernel proof; `decide` where feasible |
 | APORIA-4004 | No `partial` or `unsafe` definitions | Nontermination and unsoundness | Structural recursion; total definitions |
@@ -266,7 +269,7 @@ Custom rules:
 
 - `ast-grep` handles syntactic patterns: bare `TODO`, `#[allow]`, `sh -c`, `println!`, `unsafe` outside `ffi`, network imports outside `net`, SQL outside `store`.
 - `dylint` is optional later for semantic rules that `ast-grep` cannot express.
-- `scripts/lean-lint` scans `lean/Aporia` for banned tokens and parses `lake` diagnostics.
+- `scripts/lean-lint` scans `lean/Lean4losophy` for banned tokens and parses `lake` diagnostics.
 - The suppression audit scans for `#[allow]` and for `expect` without a code.
 
 CI:

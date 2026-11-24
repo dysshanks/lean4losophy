@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: Apache-2.0
-// Copyright 2026 The Aporia Authors
+// Copyright 2026 The lean4losophy Authors
 
-//! Core data model for Aporia.
+//! Core data model for lean4losophy.
 //!
 //! This crate owns the parts of the application that do not depend on the GUI
-//! or on Lean: the notebook folder, Markdown notes, front matter, settings, and
-//! crash-safe writes. Links, backlinks, and search arrive in M2; structured
-//! arguments in M3.
+//! or on Lean: the notebook folder, Markdown notes, front matter, settings,
+//! crash-safe writes, wiki links, and the derivable SQLite index used for
+//! backlinks and search. Structured arguments arrive in M3.
 //!
 //! # Guarantees
 //!
@@ -22,7 +22,7 @@
 //! use std::path::Path;
 //!
 //! # fn main() -> Result<(), Box<dyn std::error::Error>> {
-//! let notebook = aporia_core::Notebook::create(Path::new("/tmp/aporia-example"))?;
+//! let notebook = lean4losophy_core::Notebook::create(Path::new("/tmp/lean4losophy-example"))?;
 //! let mut note = notebook.create_note("Reading list")?;
 //! note.set_body("# Reading list\n\n- Anscombe, *Intention*\n".to_owned());
 //! notebook.save_note(&note)?;
@@ -33,6 +33,8 @@
 pub mod atomic;
 pub mod error;
 pub mod frontmatter;
+pub mod index;
+pub mod links;
 pub mod note;
 pub mod notebook;
 pub mod paths;
@@ -41,11 +43,13 @@ pub mod settings;
 
 pub use error::{Error, Result};
 pub use frontmatter::FrontMatter;
+pub use index::{Index, IndexCounts, LinkProblem, LinkResolution, SearchHit, SearchQuery};
+pub use links::{Heading, ParsedBody, WikiLink};
 pub use note::Note;
 pub use notebook::{Notebook, slugify};
 pub use settings::{EffectiveSettings, GlobalConfig, Mode, NotebookSettings, PreviewLayout};
 
-/// The version of `aporia-core` compiled into this binary.
+/// The version of `lean4losophy-core` compiled into this binary.
 ///
 /// The value comes from Cargo at build time and is always a valid semantic
 /// version string.

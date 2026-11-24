@@ -33,7 +33,7 @@ fixtures are run by `./scripts/lint`.
 | APORIA-3001 | No telemetry or analytics |
 | APORIA-3002 | No network without the consent gate |
 | APORIA-3005 | No secrets in the repository |
-| APORIA-4001 | No `sorry` or `admit` in `Aporia.Core` |
+| APORIA-4001 | No `sorry` or `admit` in `Lean4losophy.Core` |
 | APORIA-4002 | No `axiom` without an ADR |
 | APORIA-4003 | No `native_decide` in the core |
 | APORIA-5001 | Docs must pass the docs linter |

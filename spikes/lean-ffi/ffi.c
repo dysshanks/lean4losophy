@@ -16,18 +16,18 @@
 #include <gtk/gtk.h>
 #include <string.h>
 
-struct AporiaApp {
+struct Lean4losophyApp {
     GtkApplication *application;
     GtkApplicationWindow *window;
     GtkTextView *text_view;
     GtkLabel *title_label;
     GtkLabel *status_label;
     GFile *current_file;
-    AporiaSaveCallback save_callback;
+    lean4losophySaveCallback save_callback;
     void *save_user_data;
 };
 
-static void show_error(AporiaApp *app, const char *message, const char *detail) {
+static void show_error(Lean4losophyApp *app, const char *message, const char *detail) {
     GtkAlertDialog *dialog = gtk_alert_dialog_new("%s", message);
     gtk_alert_dialog_set_detail(dialog, detail);
     gtk_alert_dialog_set_modal(dialog, TRUE);
@@ -35,11 +35,11 @@ static void show_error(AporiaApp *app, const char *message, const char *detail) 
     g_object_unref(dialog);
 }
 
-static void set_status(AporiaApp *app, const char *text) {
+static void set_status(Lean4losophyApp *app, const char *text) {
     gtk_label_set_label(app->status_label, text);
 }
 
-static void notify_saved(AporiaApp *app) {
+static void notify_saved(Lean4losophyApp *app) {
     if (app->save_callback == NULL) {
         return;
     }
@@ -52,7 +52,7 @@ static void notify_saved(AporiaApp *app) {
     g_free(text);
 }
 
-static void load_into_editor(AporiaApp *app, GFile *file) {
+static void load_into_editor(Lean4losophyApp *app, GFile *file) {
     char *contents = NULL;
     gsize length = 0;
     GError *error = NULL;
@@ -65,7 +65,7 @@ static void load_into_editor(AporiaApp *app, GFile *file) {
 
     if (!g_utf8_validate(contents, (gssize)length, NULL)) {
         show_error(app, "Could not open note",
-                   "The selected file is not valid UTF-8. Aporia stores notes as UTF-8.");
+                   "The selected file is not valid UTF-8. lean4losophy stores notes as UTF-8.");
         g_free(contents);
         return;
     }
@@ -85,7 +85,7 @@ static void load_into_editor(AporiaApp *app, GFile *file) {
 }
 
 static void on_open_finished(GObject *source, GAsyncResult *result, gpointer user_data) {
-    AporiaApp *app = user_data;
+    Lean4losophyApp *app = user_data;
     GError *error = NULL;
     GFile *file = gtk_file_dialog_open_finish(GTK_FILE_DIALOG(source), result, &error);
 
@@ -104,7 +104,7 @@ static void on_open_finished(GObject *source, GAsyncResult *result, gpointer use
 
 static void on_open_clicked(GtkButton *button, gpointer user_data) {
     (void)button;
-    AporiaApp *app = user_data;
+    Lean4losophyApp *app = user_data;
 
     GtkFileDialog *dialog = gtk_file_dialog_new();
     gtk_file_dialog_set_title(dialog, "Open note");
@@ -126,7 +126,7 @@ static void on_open_clicked(GtkButton *button, gpointer user_data) {
     g_object_unref(dialog);
 }
 
-static void write_to_file(AporiaApp *app, GFile *file) {
+static void write_to_file(Lean4losophyApp *app, GFile *file) {
     GtkTextBuffer *buffer = gtk_text_view_get_buffer(app->text_view);
     GtkTextIter start;
     GtkTextIter end;
@@ -158,7 +158,7 @@ static void write_to_file(AporiaApp *app, GFile *file) {
 }
 
 static void on_save_finished(GObject *source, GAsyncResult *result, gpointer user_data) {
-    AporiaApp *app = user_data;
+    Lean4losophyApp *app = user_data;
     GError *error = NULL;
     GFile *file = gtk_file_dialog_save_finish(GTK_FILE_DIALOG(source), result, &error);
 
@@ -177,7 +177,7 @@ static void on_save_finished(GObject *source, GAsyncResult *result, gpointer use
 
 static void on_save_clicked(GtkButton *button, gpointer user_data) {
     (void)button;
-    AporiaApp *app = user_data;
+    Lean4losophyApp *app = user_data;
 
     if (app->current_file != NULL) {
         write_to_file(app, app->current_file);
@@ -234,17 +234,17 @@ static GtkWidget *build_sidebar(void) {
     return sidebar;
 }
 
-bool aporia_platform_init(void) {
+bool lean4losophy_platform_init(void) {
     return gtk_init_check() != FALSE;
 }
 
-AporiaApp *aporia_app_new(const char *title) {
-    AporiaApp *app = g_new0(AporiaApp, 1);
+Lean4losophyApp *lean4losophy_app_new(const char *title) {
+    Lean4losophyApp *app = g_new0(Lean4losophyApp, 1);
     if (app == NULL) {
         return NULL;
     }
 
-    app->application = gtk_application_new("io.github.aporia.Notebook.ffi.spike",
+    app->application = gtk_application_new("io.github.dysshanks.lean4losophy.ffi.spike",
                                            G_APPLICATION_DEFAULT_FLAGS);
     if (app->application == NULL) {
         g_free(app);
@@ -315,7 +315,7 @@ AporiaApp *aporia_app_new(const char *title) {
     return app;
 }
 
-void aporia_app_free(AporiaApp *app) {
+void lean4losophy_app_free(Lean4losophyApp *app) {
     if (app == NULL) {
         return;
     }
@@ -324,12 +324,12 @@ void aporia_app_free(AporiaApp *app) {
     g_free(app);
 }
 
-void aporia_app_set_text(AporiaApp *app, const char *text) {
+void lean4losophy_app_set_text(Lean4losophyApp *app, const char *text) {
     GtkTextBuffer *buffer = gtk_text_view_get_buffer(app->text_view);
     gtk_text_buffer_set_text(buffer, text, -1);
 }
 
-char *aporia_app_get_text(const AporiaApp *app) {
+char *lean4losophy_app_get_text(const Lean4losophyApp *app) {
     GtkTextBuffer *buffer = gtk_text_view_get_buffer(app->text_view);
     GtkTextIter start;
     GtkTextIter end;
@@ -337,18 +337,18 @@ char *aporia_app_get_text(const AporiaApp *app) {
     return gtk_text_buffer_get_text(buffer, &start, &end, TRUE);
 }
 
-void aporia_string_free(char *text) {
+void lean4losophy_string_free(char *text) {
     g_free(text);
 }
 
-void aporia_app_set_save_callback(AporiaApp *app, AporiaSaveCallback callback,
+void lean4losophy_app_set_save_callback(Lean4losophyApp *app, lean4losophySaveCallback callback,
                                   void *user_data) {
     app->save_callback = callback;
     app->save_user_data = user_data;
 }
 
-int aporia_app_run(AporiaApp *app) {
+int lean4losophy_app_run(Lean4losophyApp *app) {
     gtk_window_present(GTK_WINDOW(app->window));
-    char *argv[] = {(char *)"aporia-ffi-spike", NULL};
+    char *argv[] = {(char *)"lean4losophy-ffi-spike", NULL};
     return g_application_run(G_APPLICATION(app->application), 1, argv);
 }

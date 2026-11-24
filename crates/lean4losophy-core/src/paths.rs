@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: Apache-2.0
-// Copyright 2026 The Aporia Authors
+// Copyright 2026 The lean4losophy Authors
 
 //! Path handling for notebook-relative paths (`APORIA-3004`, `APORIA-2009`).
 //!

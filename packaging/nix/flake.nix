@@ -1,5 +1,5 @@
 {
-  description = "Aporia — local-first notebook for philosophical thinking";
+  description = "lean4losophy — local-first notebook for philosophical thinking";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
@@ -12,14 +12,14 @@
       system:
       let
         pkgs = nixpkgs.legacyPackages.${system};
-        aporia = pkgs.callPackage ./package.nix { };
+        lean4losophy = pkgs.callPackage ./package.nix { };
       in
       {
-        packages.default = aporia;
-        packages.aporia = aporia;
+        packages.default = lean4losophy;
+        packages.lean4losophy = lean4losophy;
 
         devShells.default = pkgs.mkShell {
-          inputsFrom = [ aporia ];
+          inputsFrom = [ lean4losophy ];
           packages = with pkgs; [
             cargo
             clippy

@@ -52,7 +52,10 @@ Two promises constrain the design:
 
 ### Naming
 
-The app name and app ID are deferred. Flathub submission waits for the name; internal builds use a temporary ID that is not published. The final ID is recorded here before M7.
+The product name is **lean4losophy** and the app ID is
+`io.github.dysshanks.lean4losophy`. Flathub submission uses that ID. The same
+ID is used by the Flatpak manifest, desktop entry, AppStream metadata, Nix
+package, and AUR package.
 
 ## Spike status at M0 (2026-11-24)
 

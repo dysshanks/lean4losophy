@@ -30,7 +30,7 @@ fn main() -> std::process::ExitCode {
     match run() {
         Ok(()) => std::process::ExitCode::SUCCESS,
         Err(error) => {
-            tracing::error!(%error, "aporia stopped");
+            tracing::error!(%error, "lean4losophy stopped");
             std::process::ExitCode::FAILURE
         }
     }

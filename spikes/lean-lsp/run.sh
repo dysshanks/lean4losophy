@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # SPDX-License-Identifier: Apache-2.0
-# Copyright 2026 The Aporia Authors
+# Copyright 2026 The lean4losophy Authors
 #
 # Run the M0 Lean LSP spike. Requires lake on PATH. Not part of the lint gate or
 # CI: it needs a toolchain download and a real Lean build.

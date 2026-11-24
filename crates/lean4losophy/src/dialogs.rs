@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: Apache-2.0
-// Copyright 2026 The Aporia Authors
+// Copyright 2026 The lean4losophy Authors
 
 //! Small modal dialogs: a text prompt and a destructive confirmation.
 //!
@@ -79,10 +79,14 @@ pub fn prompt_text(
 }
 
 /// Confirm an irreversible action.
+///
+/// `cancel_label` names the safe outcome ("Keep note", "Don't create"), so the
+/// pair of buttons reads as a choice rather than a generic OK/Cancel.
 pub fn confirm(
     parent: &impl IsA<gtk::Window>,
     title: &str,
     body: &str,
+    cancel_label: &str,
     accept_label: &str,
     on_accept: impl Fn() + 'static,
 ) {
@@ -107,7 +111,7 @@ pub fn confirm(
         .build();
     detail.add_css_class("dim-label");
 
-    let cancel = gtk::Button::with_label("Keep note");
+    let cancel = gtk::Button::with_label(cancel_label);
     let accept = gtk::Button::with_label(accept_label);
     accept.add_css_class("destructive-action");
 

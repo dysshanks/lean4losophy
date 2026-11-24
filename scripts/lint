@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 # SPDX-License-Identifier: Apache-2.0
-# Copyright 2026 The Aporia Authors
+# Copyright 2026 The lean4losophy Authors
 #
-# Aporia lint gate. This is the single entry point used locally and in CI.
+# lean4losophy lint gate. This is the single entry point used locally and in CI.
 # Findings are errors. Optional tools that are not installed are reported and
 # skipped; a missing optional tool is not a failure.
 

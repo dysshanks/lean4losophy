@@ -2,7 +2,7 @@
 
 **Severity:** error
 **Tool:** review, `ast-grep` rule `blocking-in-ui-handler`, profiling in CI
-**Scope:** `crates/aporia` and any code called from a GTK signal handler or the main context.
+**Scope:** `crates/lean4losophy` and any code called from a GTK signal handler or the main context.
 
 ## Why
 

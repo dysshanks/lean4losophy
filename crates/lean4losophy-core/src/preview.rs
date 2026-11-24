@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: Apache-2.0
-// Copyright 2026 The Aporia Authors
+// Copyright 2026 The lean4losophy Authors
 
 //! Markdown to a preview block model.
 //!
@@ -66,8 +66,12 @@ pub fn blocks(markdown: &str) -> Vec<Block> {
     options.extension.table = true;
     options.extension.footnotes = true;
 
+    // Block IDs are addressing metadata, not content: mask them before parsing
+    // so they never render (`FORMAT.md` section 5.3).
+    let (masked, _) = crate::links::mask_block_ids(markdown);
+
     let arena = Arena::new();
-    let root = parse_document(&arena, markdown, &options);
+    let root = parse_document(&arena, &masked, &options);
 
     let mut blocks = Vec::new();
     let mut footnotes = Vec::new();

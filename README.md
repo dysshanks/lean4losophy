@@ -1,34 +1,38 @@
-# Aporia (working title)
+# lean4losophy
 
 A local-first notebook for philosophical thinking. Notes are plain Markdown.
 Arguments can be written as structured premises and conclusions, and can
 optionally be formalized and machine-checked in Lean 4.
 
-Aporia is offline by default: no account, no telemetry, and no cloud
+lean4losophy is offline by default: no account, no telemetry, and no cloud
 dependency. A notebook is a folder of plain files that works with Git and any
 text editor.
 
 ## Status
 
-Milestone M1, the notes shell, is in place. `cargo run -p aporia` opens a
-GTK4/libadwaita notebook: create or open a folder, list and switch notes, edit
-with debounced autosave, preview Markdown side by side or toggled, rename and
-delete notes, and keep Guided/Expert and preview settings with the notebook.
+Milestone M2, links and search, is in place. `cargo run -p lean4losophy` opens a
+GTK4/libadwaita notebook where you can create and edit Markdown notes, preview
+them side by side (or toggled), link notes with `[[Title]]`, `[[Title|alias]]`,
+`[[Title#Heading]]`, and `[[Title#^block]]`, follow those links in the preview,
+see backlinks with their source context, and search with full-text ranking plus
+tag and folder filters. Renames rewrite incoming links that resolved by path.
 
-Two M1 substitutions are recorded in ADR-0002 because the build environment has
-no GtkSourceView 5 or WebKitGTK 6.0: the editor is a plain `GtkTextView`, and the
-preview is a native GTK renderer over the shared comrak block model. Line
-numbers, find/replace, the metadata panel, local images, and the first-run
-wizard step are still partial.
+Two editor/preview substitutions from M1 are recorded in ADR-0002: the editor is
+a plain `GtkTextView` (no GtkSourceView 5), and the preview is a native GTK
+renderer over the comrak block model (no WebKitGTK). Line numbers,
+find/replace, the metadata panel, local images, and the first-run wizard step
+remain partial.
 
-Gates G0 and G1 are not fully closed. G0 is accepted for Plan B (ADR-0001) since
-the shell builds and launches; Plan A's Lean half, the `lake serve` probe, and
-the Flatpak/Nix/AUR builds were not executed here, so G1 remains an M7 gate.
+`lean4losophy-core` holds the notebook model, front matter with unknown-key
+preservation, settings precedence, atomic writes, link and block parsing, and a
+disposable SQLite FTS5 index for backlinks and search. Search over the 10,000-note
+fixture measures 11 ms; a full index build measures 3.4 s and still runs on the
+UI thread.
 
-`aporia-core` holds the notebook model, front matter with unknown-key
-preservation, settings with documented precedence, atomic writes, note listing,
-and the preview block model. It is covered by unit, integration, and an ignored
-10,000-note performance fixture.
+The index requires `rusqlite` 0.41 with bundled SQLite 3.54+, so the workspace
+now declares Rust 1.89. Gates G0 and G1 are otherwise unchanged from M1: G0 is
+accepted for Plan B, and the Plan A Lean build, `lake serve` probe, and
+Flatpak/Nix/AUR builds were not executed here.
 
 ## Documentation
 
@@ -37,6 +41,8 @@ and the preview block model. It is covered by unit, integration, and an ignored
 | [SPEC.md](SPEC.md) | Product spec: goals, users, features, architecture, risks |
 | [IMPLEMENTATION-PLAN.md](IMPLEMENTATION-PLAN.md) | Milestones, gates, repository layout, quality gates |
 | [DESIGN-PLAN.md](DESIGN-PLAN.md) | Visual system, component rules, paper and typography rules |
+| [docs/UI-MAP.md](docs/UI-MAP.md) | Screen inventory, design-rule status, exceptions, and UI gaps |
+| [docs/UI-RULES.md](docs/UI-RULES.md) | VSCode × Obsidian workbench rules, density, keyboard model, and review checklist |
 | [LINT-POLICY.md](LINT-POLICY.md) | `APORIA-xxxx` rule codes, alternatives, suppression policy |
 | [OPEN-QUESTIONS.md](OPEN-QUESTIONS.md) | Settled decisions and the remaining product questions |
 | [format/FORMAT.md](format/FORMAT.md) | Normative on-disk notebook format: notes, links, arguments, settings, cache, writes |
@@ -55,8 +61,8 @@ are generated from it and must not be edited by hand.
 ├── Cargo.toml            # Rust workspace
 ├── deny.toml             # cargo-deny: licenses, advisories, bans, sources
 ├── crates/
-│   ├── aporia/           # GTK4/libadwaita application (M1 notes shell)
-│   └── aporia-core/      # notebook model, Markdown, links, search, arguments
+│   ├── lean4losophy/           # GTK4/libadwaita application (notes shell, search, backlinks)
+│   └── lean4losophy-core/      # notebook model, Markdown, links, search, arguments
 ├── design/
 │   ├── tokens.toml       # single source for app and paper tokens
 │   ├── theme.css         # generated: light GTK4/libadwaita theme
@@ -73,14 +79,14 @@ are generated from it and must not be edited by hand.
 │   └── aur/              # PKGBUILD
 ├── scripts/
 │   ├── lint              # single lint entry point, used by CI
-│   ├── lean-lint         # banned-construct scan for lean/Aporia
+│   ├── lean-lint         # banned-construct scan for lean/Lean4losophy
 │   └── gen-design-tokens # generates design outputs; --check in CI
 ├── spikes/               # M0 architecture and packaging spikes
 └── .github/workflows/    # CI: lint, test, build
 ```
 
-Planned crates are `aporia` (GTK4 app), `aporia-lean` (toolchain and LSP
-client), `aporia-paper` (manuscripts and Typst), and `aporia-cli` (headless
+Planned crates are `lean4losophy` (GTK4 app), `lean4losophy-lean` (toolchain and LSP
+client), `lean4losophy-paper` (manuscripts and Typst), and `lean4losophy-cli` (headless
 commands). They are added by their milestones.
 
 ## Prerequisites
@@ -110,13 +116,13 @@ python3 scripts/gen-design-tokens
 cargo build --workspace
 
 # Run the app (opens the home screen; no notebook is created for you)
-cargo run -p aporia
+cargo run -p lean4losophy
 
 # Run the tests
 cargo test --workspace
 
 # Run the 10,000-note performance fixture
-cargo test -p aporia-core --test performance -- --ignored
+cargo test -p lean4losophy-core --test performance -- --ignored
 
 # Check formatting and run Clippy with warnings denied
 cargo fmt --all -- --check

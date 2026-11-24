@@ -35,9 +35,9 @@ The forces:
 Adopt **Plan B** as the recommended implementation path, pending Gate G0.
 
 - UI: GTK4 + libadwaita in Rust (`gtk4-rs`), GtkSourceView 5 editor, native Wayland backend.
-- Notebook, Markdown, links, search, arguments, papers, and settings: Rust crates (`aporia-core`, `aporia-paper`, `aporia-lean` for the client).
-- Lean: optional sidecar. The app manages a toolchain, starts `lake serve`, and speaks LSP (`aporia-lean`).
-- The Lean logic library ships as `.lean` source under `lean/Aporia/`, not linked into the app binary.
+- Notebook, Markdown, links, search, arguments, papers, and settings: Rust crates (`lean4losophy-core`, `lean4losophy-paper`, `lean4losophy-lean` for the client).
+- Lean: optional sidecar. The app manages a toolchain, starts `lake serve`, and speaks LSP (`lean4losophy-lean`).
+- The Lean logic library ships as `.lean` source under `lean/Lean4losophy/`, not linked into the app binary.
 
 Plan A is not rejected on principle. It stays a valid alternative and becomes the path if G0 shows it is materially faster or less risky. The decision is confirmed or overturned at G0 on measured spike results, not preference.
 
